@@ -1209,11 +1209,17 @@
 .fa-youtube-play:before {
   content: "\f16a";
 }
+.fa-cuttlefish:before {
+  content: "\f38c";
+}
 .fa-dropbox:before {
   content: "\f16b";
 }
 .fa-stack-overflow:before {
   content: "\f16c";
+}
+.fa-blog:before {
+  content: "\f781";
 }
 .fa-instagram:before {
   content: "\f16d";
