@@ -2,8 +2,11 @@
 <search>
   <entry>
     <title>一个普通程序猿的文章索引页</title>
-    <url>/2020/03/11/hello-world/</url>
-    <content><![CDATA[<h1 id="JDK基础"><a href="#JDK基础" class="headerlink" title="JDK基础"></a>JDK基础</h1><h1 id="并发编程"><a href="#并发编程" class="headerlink" title="并发编程"></a>并发编程</h1><h1 id="RocketMQ"><a href="#RocketMQ" class="headerlink" title="RocketMQ"></a>RocketMQ</h1>]]></content>
+    <url>/2020/03/13/hello-world/</url>
+    <content><![CDATA[<h1 id="JDK基础"><a href="#JDK基础" class="headerlink" title="JDK基础"></a>JDK基础</h1><h1 id="并发编程"><a href="#并发编程" class="headerlink" title="并发编程"></a>并发编程</h1><details><summary>RocketMQ</summary>
+<a href="https://wilson-he.gitee.io/2020/03/09/聊聊mq与如何基于spring%20boot%20RocketMQ搭建一个消息中心/">聊聊MQ与如何基于Spring Boot RocketMQ搭建一个消息中心</a>
+</details>
+]]></content>
   </entry>
   <entry>
     <title>谈谈个人对JDK函数式编程的认知与使用</title>
@@ -817,6 +820,11 @@ public static &lt;S, T&gt; T copyProperties(S source, Supplier&lt;T&gt; targetSu
 ]]></content>
       <categories>
         <category>RocketMQ</category>
+        <category>Spring Boot</category>
       </categories>
+      <tags>
+        <tag>RocketMQ</tag>
+        <tag>Spring Boot</tag>
+      </tags>
   </entry>
 </search>
