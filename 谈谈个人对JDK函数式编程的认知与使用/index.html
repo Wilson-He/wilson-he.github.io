@@ -23,7 +23,7 @@
   <meta name="description" content="前言该文章主要介绍JDK中各种常见的函数式接口，并会附上一些个人对函数式编程的一些扩展思考与实际用法。 常见的函数式接口介绍jdk1.8的函数式接口都在rt.jar中java.util.function包下，以下以jdk集合类与个人常用的接口进行介绍：  Function&lt;T,R&gt;：传入类型为T的对象并执行含返回值(返回值为R-return类型)的指定方法，方法可临时实现。常见于类Op">
 <meta property="og:type" content="article">
 <meta property="og:title" content="谈谈个人对JDK函数式编程的认知与使用">
-<meta property="og:url" content="https://wilson-he.gitee.io/2020/03/09/%E8%B0%88%E8%B0%88%E4%B8%AA%E4%BA%BA%E5%AF%B9JDK%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%AE%A4%E7%9F%A5%E4%B8%8E%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:url" content="https://wilson-he.gitee.io/%E8%B0%88%E8%B0%88%E4%B8%AA%E4%BA%BA%E5%AF%B9JDK%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%AE%A4%E7%9F%A5%E4%B8%8E%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="Wilson Blog">
 <meta property="og:description" content="前言该文章主要介绍JDK中各种常见的函数式接口，并会附上一些个人对函数式编程的一些扩展思考与实际用法。 常见的函数式接口介绍jdk1.8的函数式接口都在rt.jar中java.util.function包下，以下以jdk集合类与个人常用的接口进行介绍：  Function&lt;T,R&gt;：传入类型为T的对象并执行含返回值(返回值为R-return类型)的指定方法，方法可临时实现。常见于类Op">
 <meta property="og:locale" content="zh_CN">
@@ -32,7 +32,7 @@
 <meta property="article:author" content="Wilson He">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://wilson-he.gitee.io/2020/03/09/%E8%B0%88%E8%B0%88%E4%B8%AA%E4%BA%BA%E5%AF%B9JDK%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%AE%A4%E7%9F%A5%E4%B8%8E%E4%BD%BF%E7%94%A8/">
+<link rel="canonical" href="https://wilson-he.gitee.io/%E8%B0%88%E8%B0%88%E4%B8%AA%E4%BA%BA%E5%AF%B9JDK%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%AE%A4%E7%9F%A5%E4%B8%8E%E4%BD%BF%E7%94%A8/">
 
 
 <script id="page-configurations">
@@ -197,7 +197,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/2020/03/09/%E8%B0%88%E8%B0%88%E4%B8%AA%E4%BA%BA%E5%AF%B9JDK%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%AE%A4%E7%9F%A5%E4%B8%8E%E4%BD%BF%E7%94%A8/">
+    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/%E8%B0%88%E8%B0%88%E4%B8%AA%E4%BA%BA%E5%AF%B9JDK%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%AE%A4%E7%9F%A5%E4%B8%8E%E4%BD%BF%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/atavar/wingsOfPiano.jpg">
@@ -758,12 +758,12 @@ public static &lt;S, T&gt; T copyProperties(S source, Supplier&lt;T&gt; targetSu
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/03/09/RocketMQ%E6%A6%82%E5%BF%B5%E6%A8%A1%E5%9E%8B/" rel="prev" title="RocketMQ概念模型">
+    <a href="/RocketMQ%E6%A6%82%E5%BF%B5%E6%A8%A1%E5%9E%8B/" rel="prev" title="RocketMQ概念模型">
       <i class="fa fa-chevron-left"></i> RocketMQ概念模型
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/03/13/hello-world/" rel="next" title="一个普通程序猿的文章索引页">
-      一个普通程序猿的文章索引页 <i class="fa fa-chevron-right"></i>
+    <a href="/Spring%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86/" rel="next" title="Spring面试题集">
+      Spring面试题集 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -840,20 +840,20 @@ public static &lt;S, T&gt; T copyProperties(S source, Supplier&lt;T&gt; targetSu
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
