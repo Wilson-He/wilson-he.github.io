@@ -69,28 +69,6 @@
   </entry>
   
   <entry>
-    <title>一个普通程序猿的文章索引页</title>
-    <link href="https://wilson-he.gitee.io/hello-world/"/>
-    <id>https://wilson-he.gitee.io/hello-world/</id>
-    <published>2020-03-30T09:20:14.398Z</published>
-    <updated>2020-03-30T09:20:14.399Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="JDK基础"><a href="#JDK基础" class="headerlink" title="JDK基础"></a>JDK基础</h1><h1 id="并发编程"><a href="#并发编程" class="headerlink" title="并发编程"></a>并发编程</h1><details><summary>RocketMQ</summary><a href="https://wilson-he.gitee.io/2020/03/09/聊聊mq与如何基于spring%20boot%20RocketMQ搭建一个消息中心/">聊聊MQ与如何基于Spring Boot RocketMQ搭建一个消息中心</a></details>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;JDK基础&quot;&gt;&lt;a href=&quot;#JDK基础&quot; class=&quot;headerlink&quot; title=&quot;JDK基础&quot;&gt;&lt;/a&gt;JDK基础&lt;/h1&gt;&lt;h1 id=&quot;并发编程&quot;&gt;&lt;a href=&quot;#并发编程&quot; class=&quot;headerlink&quot; title=&quot;并发编程&quot;
-      
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
     <title>Spring面试题集</title>
     <link href="https://wilson-he.gitee.io/Spring%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86/"/>
     <id>https://wilson-he.gitee.io/Spring%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86/</id>
