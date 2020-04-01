@@ -20,29 +20,40 @@
     var CONFIG = {"hostname":"wilson-he.gitee.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="一名普通的搬砖工">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Wilson Blog">
-<meta property="og:url" content="https://wilson-he.gitee.io/page/3/index.html">
+  <meta name="description" content="选择该方式搭建的理由和要做的准备每个项目在开始之前，都需要先清楚项目的目的、主要的需求和核心点在哪。我在选择搭建的方式之前，根据个人状况确认了博客的搭建需要满足以下需求：  无需自备服务器，静态网站也没关系 不错的分类归档 方便文章追溯 简洁的排版 不用了解或使用太多前端知识(排版是我的痛)  根据自行百度了解，在github&#x2F;gitee上搭建的Pages博客最起码是满足第1点要求的，选用哪种方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo+gitee&#x2F;github搭建个人博客的流程">
+<meta property="og:url" content="https://wilson-he.gitee.io/hexo+Next%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E6%B5%81%E7%A8%8B/index.html">
 <meta property="og:site_name" content="Wilson Blog">
-<meta property="og:description" content="一名普通的搬砖工">
+<meta property="og:description" content="选择该方式搭建的理由和要做的准备每个项目在开始之前，都需要先清楚项目的目的、主要的需求和核心点在哪。我在选择搭建的方式之前，根据个人状况确认了博客的搭建需要满足以下需求：  无需自备服务器，静态网站也没关系 不错的分类归档 方便文章追溯 简洁的排版 不用了解或使用太多前端知识(排版是我的痛)  根据自行百度了解，在github&#x2F;gitee上搭建的Pages博客最起码是满足第1点要求的，选用哪种方式">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/3/13/170d2c32245710c7?w=426&h=24&f=png&s=4150">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/3/13/170d2c322274bd8c?w=1096&h=492&f=jpeg&s=58000">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/3/13/170d2c322475969c?w=1176&h=596&f=png&s=237753">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/3/13/170d2c3224b4225c?w=1341&h=787&f=png&s=85865">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/3/13/170d2c322c06e40e?w=1046&h=712&f=png&s=75456">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/3/13/170d2c322cd46ccf?w=1066&h=760&f=png&s=57984">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/3/13/170d2c326af3c3ea?w=1073&h=597&f=png&s=77364">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/3/13/170d2c32757dd24a?w=700&h=543&f=png&s=38014">
+<meta property="article:published_time" content="2020-04-01T06:19:15.681Z">
+<meta property="article:modified_time" content="2020-04-01T06:19:15.682Z">
 <meta property="article:author" content="Wilson He">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2020/3/13/170d2c32245710c7?w=426&h=24&f=png&s=4150">
 
-<link rel="canonical" href="https://wilson-he.gitee.io/page/3/">
+<link rel="canonical" href="https://wilson-he.gitee.io/hexo+Next%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E6%B5%81%E7%A8%8B/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false
+    isHome : false,
+    isPost : true
   };
 </script>
 
-  <title>Wilson Blog</title>
+  <title>hexo+gitee/github搭建个人博客的流程 | Wilson Blog</title>
   
 
 
@@ -191,10 +202,10 @@
             
 
   <div class="posts-expand">
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/hexo+Next%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E6%B5%81%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -208,8 +219,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/hexo+Next%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E6%B5%81%E7%A8%8B/" class="post-title-link" itemprop="url">hexo+gitee/github搭建个人博客的流程</a>
+          hexo+gitee/github搭建个人博客的流程
         </h1>
 
         <div class="post-meta">
@@ -225,7 +235,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="选择该方式搭建的理由和要做的准备"><a href="#选择该方式搭建的理由和要做的准备" class="headerlink" title="选择该方式搭建的理由和要做的准备"></a>选择该方式搭建的理由和要做的准备</h2><p>每个项目在开始之前，都需要先清楚项目的目的、主要的需求和核心点在哪。我在选择搭建的方式之前，根据个人状况确认了博客的搭建需要满足以下需求：</p>
+        <h2 id="选择该方式搭建的理由和要做的准备"><a href="#选择该方式搭建的理由和要做的准备" class="headerlink" title="选择该方式搭建的理由和要做的准备"></a>选择该方式搭建的理由和要做的准备</h2><p>每个项目在开始之前，都需要先清楚项目的目的、主要的需求和核心点在哪。我在选择搭建的方式之前，根据个人状况确认了博客的搭建需要满足以下需求：</p>
 <ol>
 <li>无需自备服务器，静态网站也没关系</li>
 <li>不错的分类归档</li>
@@ -297,27 +307,56 @@
 <li>fontawesome图标网站：<a href="https://fontawesome.com/?from=io" target="_blank" rel="noopener">https://fontawesome.com/?from=io</a></li>
 </ol>
 
-      
     </div>
 
     
     
     
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="Wilson He 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="Wilson He 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/RocketMQ%E6%A6%82%E5%BF%B5%E6%A8%A1%E5%9E%8B/" rel="prev" title="RocketMQ概念模型">
+      <i class="fa fa-chevron-left"></i> RocketMQ概念模型
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/index/" rel="next" title="一个普通程序猿的文章索引页">
+      一个普通程序猿的文章索引页 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
       </footer>
+    
   </article>
   
   
   
 
   </div>
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
-
 
 
           </div>
@@ -368,6 +407,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#选择该方式搭建的理由和要做的准备"><span class="nav-number">1.</span> <span class="nav-text">选择该方式搭建的理由和要做的准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建hexo本地环境"><span class="nav-number">2.</span> <span class="nav-text">搭建hexo本地环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#个人了解到的hexo与next主题配置"><span class="nav-number">3.</span> <span class="nav-text">个人了解到的hexo与next主题配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#菜单栏menu配置"><span class="nav-number">3.1.</span> <span class="nav-text">菜单栏menu配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文章创建、添加标签、分类"><span class="nav-number">3.2.</span> <span class="nav-text">文章创建、添加标签、分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#个人-config-yml主要更改的配置"><span class="nav-number">3.3.</span> <span class="nav-text">个人_config.yml主要更改的配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#个人themes-next-config-yml主要更改的配置"><span class="nav-number">3.4.</span> <span class="nav-text">个人themes&#x2F;next&#x2F;_config.yml主要更改的配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署到github-gitee"><span class="nav-number">4.</span> <span class="nav-text">部署到github&#x2F;gitee</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建过程使用到的文档"><span class="nav-number">5.</span> <span class="nav-text">搭建过程使用到的文档</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
