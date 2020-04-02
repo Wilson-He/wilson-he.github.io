@@ -195,7 +195,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/RocketMQ%E6%A6%82%E5%BF%B5%E6%A8%A1%E5%9E%8B/">
+    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/index/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/atavar/wingsOfPiano.jpg">
@@ -209,19 +209,10 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/RocketMQ%E6%A6%82%E5%BF%B5%E6%A8%A1%E5%9E%8B/" class="post-title-link" itemprop="url">RocketMQ概念模型</a>
+            <a href="/index/" class="post-title-link" itemprop="url">一个普通程序猿的文章索引页</a>
         </h1>
 
         <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/RocketMQ/" itemprop="url" rel="index"><span itemprop="name">RocketMQ</span></a>
-                </span>
-            </span>
 
           
 
@@ -234,157 +225,52 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <blockquote>
-<h5 id="RocketMQ主要由-Producer、Broker、Consumer、NameServer四部分组成"><a href="#RocketMQ主要由-Producer、Broker、Consumer、NameServer四部分组成" class="headerlink" title="RocketMQ主要由 Producer、Broker、Consumer、NameServer四部分组成"></a>RocketMQ主要由 Producer、Broker、Consumer、NameServer四部分组成</h5><ul>
-<li>Producer 生产消息</li>
-<li>Consumer 从Broker读取消费消息</li>
-<li>Broker 存储Producer发送过来的消息</li>
-<li>NameServer 为Producer或Consumer路由消息到Broker<br>Broker 在实际部署过程中对应一台服务器，每个 Broker 可以存储多个Topic的消息，每个Topic的消息也可以分片存储于不同的 Broker。Message Queue 用于存储消息的物理地址，每个Topic中的消息地址存储于多个 Message Queue 中。ConsumerGroup 由多个Consumer 实例构成。RocketMQ启动顺序为先NameServer，再Broker。</li>
+          <h1 id="JDK基础"><a href="#JDK基础" class="headerlink" title="JDK基础"></a>JDK基础</h1><ul>
+<li><a href="/java基础">Java基础</a></li>
 </ul>
-</blockquote>
-<p><img src="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/RocketMQ/Model.png" alt="Model.png"></p>
-<ul>
-<li><h3 id="Topic与Queue"><a href="#Topic与Queue" class="headerlink" title="Topic与Queue"></a>Topic与Queue</h3><p>Topic是一类消息的集合，每个主题包含若干条消息，每条消息只能属于一个主题，是RocketMQ进行消息订阅的基本单位。<br>在RocketMQ中Queue是组成Topic的更小单元，集群消费模式下一个消费者只消费该Topic中部分Queue中的消息，当一个消费者开启广播模式时则会消费该Topic下所有Queue中的消息。</p>
-</li>
-<li><h3 id="Broker-Server-代理服务器"><a href="#Broker-Server-代理服务器" class="headerlink" title="Broker Server(代理服务器)"></a>Broker Server(代理服务器)</h3><p>消息中转角色，负责存储消息、转发消息。代理服务器在RocketMQ系统中负责接收从生产者发送来的消息并存储、同时为消费者的拉取请求作准备。代理服务器也存储消息相关的元数据，包括消费者组、消费进度偏移(offset)和主题(Topic)和队列消息等。</p>
-</li>
-<li><h3 id="Name-Server-名字服务"><a href="#Name-Server-名字服务" class="headerlink" title="Name Server(名字服务)"></a>Name Server(名字服务)</h3><p>名称服务充当路由消息的提供者。生产者或消费者能够通过名字服务查找各主题相应的Broker IP列表。多个Namesrv实例组成集群，但相互独立，没有信息交换。</p>
-</li>
-<li><h3 id="Producer-Group-生产者组"><a href="#Producer-Group-生产者组" class="headerlink" title="Producer Group(生产者组)"></a>Producer Group(生产者组)</h3><p>同一类Producer的集合，这类Producer发送同一类消息且发送逻辑一致。如果发送的是事物消息且原始生产者在发送之后崩溃，则Broker服务器会联系同一生产者组的其他生产者实例以提交或回溯消费。</p>
-</li>
-<li><h3 id="Consumer-Group-消费者组"><a href="#Consumer-Group-消费者组" class="headerlink" title="Consumer Group(消费者组)"></a>Consumer Group(消费者组)</h3><p>同一类Consumer的集合，这类Consumer通常消费同一类消息且消费逻辑一致。消费者组使得在消息消费方面，实现负载均衡和容错的目标变得非常容易。要注意的是，消费者组的消费者实例必须订阅完全相同的Topic。RocketMQ 支持两种消息模式：<em>集群消费（Clustering）</em> 和<em>广播消费（Broadcasting）</em>。</p>
-</li>
-<li><h3 id="Offset-Message-Queue下的offset"><a href="#Offset-Message-Queue下的offset" class="headerlink" title="Offset(Message Queue下的offset)"></a>Offset(Message Queue下的offset)</h3><ul>
-<li>max offset<br>MessageQueue中的max offset在源码中表示指消息的最大offset+1，即下条消息入队的位置。</li>
-<li>min offset<br>标识当前队列的最小offset。由于消息存储一段时间后，消费了的消息会从从磁盘物理删除，message queue的min offset也就对应增长，即比minOffset小的消息不存在broker上了。</li>
-<li>consumer offset<br>Consumer Group在MessageQueue上的消息消费进度，其实际值为队列中消费了的消息数+1，即表示下次拉取消息的位置。<br>DefaultMQPushConsumer.setConsumeFromWhere(ConsumerFromWhere)可设置从哪开始消费消息，但该设置的优先级在offset store后，当从offset store中读取不到offset的时候，ConsumerFromWhere的设置才生效。大部分该设置在ConsumerGroup初次启动时才有效(启动会一般会存储offset)，即使Consumer正常运行时重启，依旧会接着上次的offset(从offset store中获取)开始消费，ConsumeFromWhere的设置无效。</li>
+<h1 id="并发编程"><a href="#并发编程" class="headerlink" title="并发编程"></a>并发编程</h1><h1 id="开发框架"><a href="#开发框架" class="headerlink" title="开发框架"></a>开发框架</h1><ul>
+<li><a href="https://mybatis.plus/guide/" target="_blank" rel="noopener">Mybatis Plus</a></li>
+<li><a href="https://github.com/ctripcorp/apollo" target="_blank" rel="noopener">携程apollo</a></li>
+<li><a href="https://github.com/apache/rocketmq-spring/wiki" target="_blank" rel="noopener">rocketmq-spring</a></li>
+<li><a href="http://kafka.apachecn.org/" target="_blank" rel="noopener">Kafka</a></li>
+<li><a href="https://github.com/spring-projects/spring-boot/wiki" target="_blank" rel="noopener">Spring Boot Release Notes-了解新版特性</a></li>
+<li><a href="https://github.com/Wilson-He/swagger2-spring-boot-starter" target="_blank" rel="noopener">个人开源swagger2-spring-boot-starter框架</a></li>
+<li><a href="https://gitee.com/Wilson-He/generator-maven-plugin" target="_blank" rel="noopener">个人开源mybatis plus maven代码生成器插件</a></li>
 </ul>
-</li>
-<li><h3 id="Clustering-集群消费"><a href="#Clustering-集群消费" class="headerlink" title="Clustering(集群消费)"></a>Clustering(集群消费)</h3><p>集群消费模式下,相同Consumer Group的每个Consumer实例平均分摊消息。</p>
-</li>
-<li><h3 id="广播消费-Broadcasting"><a href="#广播消费-Broadcasting" class="headerlink" title="广播消费(Broadcasting)"></a>广播消费(Broadcasting)</h3><p>广播消费模式下，相同Consumer Group的每个Consumer实例都接收全量的消息。</p>
-</li>
-<li><h3 id="Normal-Ordered-Message-普通顺序消息"><a href="#Normal-Ordered-Message-普通顺序消息" class="headerlink" title="Normal Ordered Message(普通顺序消息)"></a>Normal Ordered Message(普通顺序消息)</h3><p>普通顺序消费模式下，消费者通过同一个消费队列收到的消息是有顺序的，不同消息队列收到的消息则可能是无顺序的。<br>如Broker Server将消息Msg_A、Msg_B、Msg_C按顺序发送到Topic_A主题上的队列Q_A、Q_B、Q_A，Consumer_A从订阅的Topic_A拉去消息的顺序可能为下：</p>
-<ul>
-<li>Msg_A-&gt;Msg_B-&gt;Msg_C</li>
-<li>Msg_B-&gt;Msg_A-&gt;Msg_C</li>
-<li>Msg_A-&gt;Msg_C-&gt;Msg_B<br>Msg_B进入队列Q_A在Msg_A之后，所以Msg_B必然在接收到Msg_A后才被发送</li>
+<h1 id="常用软件文档"><a href="#常用软件文档" class="headerlink" title="常用软件文档"></a>常用软件文档</h1><ul>
+<li><a href="https://dev.mysql.com/doc/" target="_blank" rel="noopener">MySQL</a></li>
+<li><a href="http://nginx.org/en/docs/" target="_blank" rel="noopener">Nginx</a></li>
+<li><a href="https://docs.docker.com/" target="_blank" rel="noopener">docker</a></li>
+<li><a href="https://hub.docker.com/u/library" target="_blank" rel="noopener">docker hub</a></li>
+<li><a href="https://jenkins.io/zh/doc/" target="_blank" rel="noopener">Jenkins</a></li>
+</ul>
+<h1 id="个人常用工具"><a href="#个人常用工具" class="headerlink" title="个人常用工具"></a>个人常用工具</h1><ul>
+<li><a href="http://www.baidu.com/link?url=HQhRL3UQ03YHc7-rGfijpY8aBYbgMOFkLCIiz2rVGwjAi3zwLviXMR3SgfoCMM2w&wd=&eqid=d2eb5eff0001257f000000065e85a396" target="_blank" rel="noopener">Postman</a></li>
+<li><a href="https://plugins.jetbrains.com/" target="_blank" rel="noopener">Intellij插件</a><ul>
+<li><a href="https://plugins.jetbrains.com/plugin/9837-mybatiscodehelperpro" target="_blank" rel="noopener">MyBatisCodeHelperPro</a></li>
+<li><a href="https://plugins.jetbrains.com/plugin/8579-translation" target="_blank" rel="noopener">Translation</a></li>
+<li><a href="https://plugins.jetbrains.com/plugin/6317-lombok" target="_blank" rel="noopener">Lombok</a></li>
+<li><a href="https://plugins.jetbrains.com/plugin/7179-maven-helper" target="_blank" rel="noopener">Maven Helper</a></li>
+<li><a href="https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines" target="_blank" rel="noopener">Alibaba Java Coding Guidelines</a></li>
 </ul>
 </li>
-<li><h3 id="Strictly-Ordered-Message-严格顺序消息"><a href="#Strictly-Ordered-Message-严格顺序消息" class="headerlink" title="Strictly Ordered Message(严格顺序消息)"></a>Strictly Ordered Message(严格顺序消息)</h3><p>严格顺序消息模式下，消费者收到的所有消息均是有顺序的。如上例中Consumer_A收到的顺序只会是Msg_A-&gt;Msg_B-&gt;Msg_C</p>
-</li>
-<li><h3 id="Message-消息"><a href="#Message-消息" class="headerlink" title="Message(消息)"></a>Message(消息)</h3><p>消息系统所传输信息的物理载体，生产和消费数据的最小单位，每条消息必须属于一个主题。RocketMQ中每个消息拥有唯一的Message ID，且可以携带具有业务标识的Key。系统提供了通过Message ID和Key查询消息的功能。常用属性：</p>
-<ul>
-<li>topic: 所属topic</li>
-<li>tags: 消息标签，用来做服务端消息过滤。一个topic下可以有很多tags，一般都通过topic+tags来消费自己想要的结果。</li>
-<li>keys: 消息关键词，查询消息使用</li>
-<li>body: 消息内容</li>
+<li><a href="https://boostnote.io/" target="_blank" rel="noopener">Markdown编辑器Boostnote</a><ul>
+<li><a href="https://github.com/BoostIO/Boostnote/wiki" target="_blank" rel="noopener">Wiki文档</a></li>
+<li><a href="http://plantuml.com/" target="_blank" rel="noopener">plantuml语法文档绘制UML</a></li>
 </ul>
 </li>
-<li><h3 id="Tag-标签"><a href="#Tag-标签" class="headerlink" title="Tag(标签)"></a>Tag(标签)</h3><p>可理解为二级Topic，用于同一Topic下区分不同类型的消息。来自同一业务单元的消息，可以根据不同业务目的在同一Topic下设置不同标签。标签能够有效地保持代码的清晰度和连贯性，并优化RocketMQ提供的查询系统。消费者可以根据Tag实现对不同子Topic的不同消费逻辑，实现更好的扩展性。</p>
-</li>
-<li><h2 id="各MQ产品对比（译自RocketMQ官方对比）"><a href="#各MQ产品对比（译自RocketMQ官方对比）" class="headerlink" title="各MQ产品对比（译自RocketMQ官方对比）"></a>各MQ产品对比（译自RocketMQ官方对比）</h2></li>
 </ul>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>RocketMQ</th>
-<th>Kafka</th>
-<th>ActiveMQ</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>客户端SDK</td>
-<td>Java，C ++，Go</td>
-<td>Java，Scala等</td>
-<td>Java，.NET，C ++等</td>
-</tr>
-<tr>
-<td>协议规范</td>
-<td>拉模型，支持TCP，JMS，OpenMessaging</td>
-<td>拉模型，支持TCP</td>
-<td>推送模型，支持OpenWire，STOMP，AMQP，MQTT，JMS</td>
-</tr>
-<tr>
-<td>消息排序</td>
-<td>确保对消息进行严格排序，并可以正常扩展</td>
-<td>确保分区内消息的顺序</td>
-<td>排他消费者或排他队列可确保顺序</td>
-</tr>
-<tr>
-<td>定时消息</td>
-<td>支持</td>
-<td>不支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>批量消息</td>
-<td>支持，具有同步模式，可避免消息丢失</td>
-<td>支持，带异步Producer</td>
-<td>不支持</td>
-</tr>
-<tr>
-<td>广播消息</td>
-<td>支持</td>
-<td>不支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>消息过滤器</td>
-<td>支持，基于SQL92的属性过滤器表达式过滤</td>
-<td>支持，使用kafka stream过滤</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>服务器触发重新交付</td>
-<td>支持</td>
-<td>不支持</td>
-<td>不支持</td>
-</tr>
-<tr>
-<td>消息存储</td>
-<td>高性能和低延迟文件存储</td>
-<td>高性能文件存储</td>
-<td>使用JDBC和高性能日志（例如levelDB，kahaDB）存储支持非常快速持久性</td>
-</tr>
-<tr>
-<td>消息追溯</td>
-<td>支持时间戳和偏移量追溯</td>
-<td>支持的偏移量追溯</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>消息优先级</td>
-<td>不支持</td>
-<td>不支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>高可用与故障切换</td>
-<td>支持主从模式</td>
-<td>支持，需额外配置ZooKeeper服务器</td>
-<td>支持，取决于存储，如果使用kahadb，则需要ZooKeeper服务器</td>
-</tr>
-<tr>
-<td>消息追踪</td>
-<td>支持</td>
-<td>不支持</td>
-<td>不支持</td>
-</tr>
-<tr>
-<td>配置特点</td>
-<td>开箱即用，用户只需要注意一些配置</td>
-<td>使用键值对格式进行配置，这些值可以从文件或以编程方式提供</td>
-<td>默认配置为低级别，用户需要优化配置参数</td>
-</tr>
-<tr>
-<td>操作管理工具</td>
-<td>支持，Web控制台和终端命令都可操作管理</td>
-<td>支持，使用终端命令管理</td>
-<td>支持</td>
-</tr>
-</tbody></table>
+<h1 id="在线工具网站"><a href="#在线工具网站" class="headerlink" title="在线工具网站"></a>在线工具网站</h1><ul>
+<li><a href="https://linuxize.com/" target="_blank" rel="noopener">linux各软件安装教程</a></li>
+<li><a href="https://www.json.cn/" target="_blank" rel="noopener">json格式化</a></li>
+<li><a href="https://www.toyaml.com/index.html" target="_blank" rel="noopener">yaml与properties配置互转</a></li>
+</ul>
+<h1 id="书籍"><a href="#书籍" class="headerlink" title="书籍"></a>书籍</h1><ul>
+<li><a href="https://lingcoder.gitee.io/onjava8/#/" target="_blank" rel="noopener">《Java编程思想》Java 8</a></li>
+</ul>
+<h1 id="实战范例"><a href="#实战范例" class="headerlink" title="实战范例"></a>实战范例</h1><ul>
+<li><a href="/聊聊mq与如何基于spring%20boot%20RocketMQ搭建一个消息中心">聊聊MQ与如何基于Spring Boot RocketMQ搭建一个消息中心</a></li>
+</ul>
 
       
     </div>
