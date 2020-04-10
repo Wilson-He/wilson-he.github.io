@@ -195,7 +195,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/Spring%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86/">
+    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/%E5%88%AB%E6%A0%B7%E7%9A%84Markdown%E7%94%A8%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/atavar/wingsOfPiano.jpg">
@@ -209,19 +209,10 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/Spring%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86/" class="post-title-link" itemprop="url">Spring面试题集</a>
+            <a href="/%E5%88%AB%E6%A0%B7%E7%9A%84Markdown%E7%94%A8%E6%B3%95/" class="post-title-link" itemprop="url">Markdown语法大全</a>
         </h1>
 
         <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-                </span>
-            </span>
 
           
 
@@ -234,7 +225,89 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Spring的事务隔离级别"><a href="#Spring的事务隔离级别" class="headerlink" title="Spring的事务隔离级别"></a>Spring的事务隔离级别</h1>
+          <h1 id="Markdown基础语法"><a href="#Markdown基础语法" class="headerlink" title="Markdown基础语法"></a>Markdown基础语法</h1><p>#标识1-6级标题  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 一级标题</span><br><span class="line">## 二级标题</span><br><span class="line">### 三级标题</span><br><span class="line">#### 四级标题</span><br><span class="line">##### 五级标题</span><br><span class="line">###### 六级标题</span><br></pre></td></tr></table></figure>
+<p>换行：段落末尾添加两个或以上空格<br><em>字体样式</em>：</p>
+<ul>
+<li>斜体：<code>_斜体_</code>或<code>*斜体*</code></li>
+<li>粗体：<code>__加粗__</code>或<code>**加粗**</code></li>
+<li>斜体加粗：<code>***斜体加粗***</code>或<code>___斜体加粗___</code>  </li>
+<li>删除线： <code>~~删除线~~</code></li>
+<li>下划线： <code>&lt;u&gt;下划线&lt;/u&gt;</code></li>
+<li>脚注：  <code>文本[^脚注名]</code><br>列表(3种语法)：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">* 元素1</span><br><span class="line">* 元素2</span><br><span class="line"> </span><br><span class="line">- 元素1</span><br><span class="line">- 元素2</span><br><span class="line"> </span><br><span class="line">+ 元素1</span><br><span class="line">+ 元素2</span><br><span class="line"></span><br><span class="line">多级列表：</span><br><span class="line">- 一级列表1</span><br><span class="line">  - 二级列表1.1  </span><br><span class="line">    这里是二级列表  </span><br><span class="line">    - 三级列表1.1.1  </span><br><span class="line">    这里是三级列表</span><br><span class="line">  - 二级列表1.2</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>分割线：<code>---</code>、<code>- - -</code>、<code>&lt;hr&gt;</code>、<code>***</code>、<code>* * *</code><br>区块：<code>&gt; 文本内容</code>,区块可以有多级，根据 <code>&gt;</code> 个数确认级数，可以与列表语法互相嵌套，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">列表嵌套区块：</span><br><span class="line">- 元素1</span><br><span class="line">  &gt; 一级区块</span><br><span class="line">  &gt;&gt; 二级区块</span><br><span class="line">  - 元素1.1</span><br><span class="line">- 元素2</span><br><span class="line">  - 元素2.1</span><br><span class="line">  &gt; 一级区块</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line"></span><br><span class="line">代码块(纯文本,&#96;&#96;&#96;后可选择语言,如java、javascript)： </span><br><span class="line">&lt;pre&gt;</span><br></pre></td></tr></table></figure>
+<p>// code or text</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;&#x2F;pre&gt;</span><br><span class="line">或</span><br></pre></td></tr></table></figure>
+<pre>
+code or text
+</pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">超链接： &#96;[个人blog](http:&#x2F;&#x2F;wilson-he.gitee.io&#x2F;)&#96;  </span><br><span class="line">插入图片：&#96;![description](url)&#96;,也可使用img标签&#96;&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;www.editplus.com&#x2F;ss&#x2F;editplus680x340.png&quot; width&#x3D;&quot;50%&quot; height&#x3D;&quot;30%&quot;&#x2F;&gt;&#96;  </span><br><span class="line">表格：</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>表头</th>
+<th>表头</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+<tr>
+<td>单元格</td>
+<td></td>
+</tr>
+<tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+<tr>
+<td>```</td>
+<td></td>
+</tr>
+<tr>
+<td>`</td>
+<td></td>
+</tr>
+<tr>
+<td>内容缩略：</td>
+<td></td>
+</tr>
+<tr>
+<td><details></td>
+<td></td>
+</tr>
+<tr>
+<td><summary>概况</summary></td>
+<td></td>
+</tr>
+<tr>
+<td>详细内容</td>
+<td></td>
+</tr>
+<tr>
+<td></details></td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+    <caption>标题</caption>
+    <tr>
+        <td>1</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>22</td>
+    </tr>
+    <tr>
+        <td>111</td>
+    </tr>
+</table>
       
     </div>
 
@@ -253,7 +326,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -321,7 +394,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

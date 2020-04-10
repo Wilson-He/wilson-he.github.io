@@ -20,16 +20,18 @@
     var CONFIG = {"hostname":"wilson-he.gitee.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="数据类型 Java中的8个基本类型   数据类型 boolean byte char short int long float double    bit 32 8 16 16 32 64 64 64   最小值 - -2^7 -2^15 -2^15 -2^31 -2^63 -2^63 -2^63   最大值 - 2^7-1 2^15-1 2^15-1 2^31-1 2^63-1 2^63-1 2">
+  <meta name="description" content="面向对象编程的三大特性 封装将对象不需要让外界访问的成员变量和方法私有化，只提供符合开发者意愿的公有方法来访问这些数据和逻辑，保证了数据的安全和程序的稳定。java通过权限修饰符来控制类成员的访问权限，各修饰符的访问权限如下：    修饰符 当前类 同一个包 子类 其它    private √      默认 √ √     protected √ √ √    public √ √ √ √">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java基础">
 <meta property="og:url" content="https://wilson-he.gitee.io/java%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="Wilson Blog">
-<meta property="og:description" content="数据类型 Java中的8个基本类型   数据类型 boolean byte char short int long float double    bit 32 8 16 16 32 64 64 64   最小值 - -2^7 -2^15 -2^15 -2^31 -2^63 -2^63 -2^63   最大值 - 2^7-1 2^15-1 2^15-1 2^31-1 2^63-1 2^63-1 2">
+<meta property="og:description" content="面向对象编程的三大特性 封装将对象不需要让外界访问的成员变量和方法私有化，只提供符合开发者意愿的公有方法来访问这些数据和逻辑，保证了数据的安全和程序的稳定。java通过权限修饰符来控制类成员的访问权限，各修饰符的访问权限如下：    修饰符 当前类 同一个包 子类 其它    private √      默认 √ √     protected √ √ √    public √ √ √ √">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/hexo-blog/Java%E5%9F%BA%E7%A1%80/%E5%AD%97%E8%8A%82%E7%A0%81.png">
-<meta property="article:published_time" content="2020-03-30T09:25:03.007Z">
-<meta property="article:modified_time" content="2020-03-30T09:25:03.008Z">
+<meta property="og:image" content="http://www.plantuml.com/plantuml/png/bOz1JeL038RtSuecRY1w1ACO3k324nGeK5BQo7GmQhox0HmNnZpoTas_R_v_MaN7nTCieHMC4PwRYLg7pm00S0EApYlbRIkcL9J_ifuLXJyolZqMK6-fzuyFC93lyozlp8HGWLuJIYn-OgoPil3Y2-i0RiUG7-PULeSHurXRzwSq6wjn1shE_Vkfy2HomNb3zZCijdsMPxBaLwXt-o6AQh4CNw4YxT8itm00">
+<meta property="og:image" content="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/hexo-blog/Java%E5%9F%BA%E7%A1%80/String.png">
+<meta property="article:published_time" content="2020-04-08T07:57:58.266Z">
+<meta property="article:modified_time" content="2020-04-08T07:57:58.266Z">
 <meta property="article:author" content="Wilson He">
 <meta property="article:tag" content="Java基础">
 <meta name="twitter:card" content="summary">
@@ -238,8 +240,60 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><hr>
-<h3 id="Java中的8个基本类型"><a href="#Java中的8个基本类型" class="headerlink" title="Java中的8个基本类型"></a>Java中的8个基本类型</h3><table>
+        <h2 id="面向对象编程的三大特性"><a href="#面向对象编程的三大特性" class="headerlink" title="面向对象编程的三大特性"></a>面向对象编程的三大特性</h2><hr>
+<h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><p>将对象不需要让外界访问的成员变量和方法私有化，只提供符合开发者意愿的公有方法来访问这些数据和逻辑，保证了数据的安全和程序的稳定。<br>java通过权限修饰符来控制类成员的访问权限，各修饰符的访问权限如下：</p>
+<table>
+<thead>
+<tr>
+<th>修饰符</th>
+<th>当前类</th>
+<th>同一个包</th>
+<th>子类</th>
+<th>其它</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>private</td>
+<td>√</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>默认</td>
+<td>√</td>
+<td>√</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>protected</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td></td>
+</tr>
+<tr>
+<td>public</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+</tbody></table>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>继承是指从已有的类中派生出新的类，新的类拥有父类非私有的属性与方法。继承的类叫做子类（派生类），被继承的类叫做父类（超类或者基类）。</p>
+<h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><p>多态是同一个行为具有多个不同表现形式或形态的能力。多态的优点：</p>
+<ul>
+<li>消除类型之间的耦合关系</li>
+<li>可替换性</li>
+<li>可扩充性</li>
+<li>接口性</li>
+<li>灵活性</li>
+<li>简化性</li>
+</ul>
+<p>在Java中多态的两种主要形式：<strong>继承(多个子类对同一方法的重写)</strong>和<strong>实现(接口实现)</strong></p>
+<h2 id="Java的基本数据类型"><a href="#Java的基本数据类型" class="headerlink" title="Java的基本数据类型"></a>Java的基本数据类型</h2><hr>
+<table>
 <thead>
 <tr>
 <th>数据类型</th>
@@ -330,7 +384,7 @@
 <li>iload_1、iload_2将局部变量1、2的int类型值入栈,iadd将栈顶的2个int值相加，并将结果压栈,i2l将int转long(不是i2十一哦)，然后lstore_3将栈顶long值保存到局部变量3中</li>
 </ol>
 <h2 id="引用数据类型"><a href="#引用数据类型" class="headerlink" title="引用数据类型"></a>引用数据类型</h2><hr>
-<p>java的引用类型只有三种，分别是类(class)、接口(interface)、数组。当某一引用数据内容在其中一个作用域被改变时，其它作用域中该引用数据内容也会发生改变。<br>JVM内存区域主要为堆和栈，栈可以说是方法执行的内存模型，当在方法里定义一个变量时，栈就会为该变量分配内存空间，当超出变量的作用域时，其分配的栈空间就会被释放。栈的存取速度比堆要快，仅次于寄存器，但存在栈中的数据大小与生存期必须是确定的，故Java的8种基本数据类型和对象引用变量都是存放在栈中(设想下若对象存放到栈中，那么传对象参数时每传递到一个方法就会导致上一个方法对对象的回收，导致含一定大小的内存回收频繁降低程序性能，故使用堆存放对象)。<br>堆是所有的对象实例以及数组分配内存的运行时数据区域，即使对象已经没有在任何地方被引用了占用的空间也不会马上被释放，而是等到触发某些条件(如手动调用System.gc()、新生代空间不足、老年代空间不足等)才会被回收器回收。</p>
+<p>java的引用类型只有三种，分别是<strong>类(class)</strong>、<strong>接口(interface)</strong>、<strong>数组</strong>。当某一引用数据内容在其中一个作用域被改变时，其它作用域中该引用数据内容也会发生改变。<br>JVM内存区域主要为堆和栈，栈可以说是方法执行的内存模型，当在方法里定义一个变量时，栈就会为该变量分配内存空间，当超出变量的作用域时，其分配的栈空间就会被释放。栈的存取速度比堆要快，仅次于寄存器，但存在栈中的数据大小与生存期必须是确定的，故Java的8种基本数据类型和对象引用变量都是存放在栈中(设想下若对象存放到栈中，那么传对象参数时每传递到一个方法就会导致上一个方法对对象的回收，导致含一定大小的内存回收频繁降低程序性能，故使用堆存放对象)。<br>堆是所有的对象实例以及数组分配内存的运行时数据区域，即使对象已经没有在任何地方被引用了占用的空间也不会马上被释放，而是等到触发某些条件(如手动调用System.gc()、新生代空间不足、老年代空间不足等)才会被回收器回收。</p>
 <p>引用测试例子：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int[] array &#x3D; new int[]&#123;1, 2, 3&#125;;</span><br><span class="line">        changeArray(array);</span><br><span class="line">        System.out.println(array[0]); &#x2F;&#x2F; 输出：11</span><br><span class="line">        Integer integer &#x3D; new Integer(5);</span><br><span class="line">        changeInteger(integer);</span><br><span class="line">        System.out.println(integer); &#x2F;&#x2F; 输出：5</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void changeArray(int[] array) &#123;</span><br><span class="line">        array[0] &#x3D; 11;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void changeInteger(Integer integer) &#123;</span><br><span class="line">        integer &#x3D; 10; &#x2F;&#x2F; integer &#x3D; Integer.valueOf(10);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void changeStr(String str) &#123;</span><br><span class="line">        str &#x3D; &quot;xxx&quot;; &#x2F;&#x2F; str &#x3D; String.valueOf(&quot;xxx&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -344,8 +398,7 @@
 <li>方法：声明方法不能被子类重写，private方法隐式地被指定为final。</li>
 <li>类：声明类不允许被继承。</li>
 </ul>
-<h3 id="static：静态关键字"><a href="#static：静态关键字" class="headerlink" title="static：静态关键字"></a>static：静态关键字</h3><hr>
-<h4 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h4><p>又称类变量，表示变量属于类(Class对象)的。静态变量在内存中只存在一份，在类的所有实例对象都共享静态变量，可以直接通过类名来访问它，静态变量在内存中只存在一份。</p>
+<h3 id="static：静态关键字"><a href="#static：静态关键字" class="headerlink" title="static：静态关键字"></a>static：静态关键字</h3><h4 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h4><p>又称类变量，表示变量属于类(Class对象)的。静态变量在内存中只存在一份，在类的所有实例对象都共享静态变量，可以直接通过类名来访问它，静态变量在内存中只存在一份。</p>
 <ul>
 <li>实例变量：实例对象内非static标识的的属性变量。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public class A &#123;</span><br><span class="line"></span><br><span class="line">    private int x;         &#x2F;&#x2F; 实例变量</span><br><span class="line">    private static int y;  &#x2F;&#x2F; 静态变量</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -366,7 +419,8 @@
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class SingleTon &#123;</span><br><span class="line">    public static int count1;  &#x2F;&#x2F; 连接-准备阶段-1.1 count1 &#x3D; 0</span><br><span class="line">    public static int count2 &#x3D; 1; &#x2F;&#x2F; 连接-准备阶段-1.2 count2 &#x3D; 1</span><br><span class="line"></span><br><span class="line">    static &#123;</span><br><span class="line">        &#x2F;&#x2F; 1.4 连接-准备阶段 count1 &#x3D; 2</span><br><span class="line">        System.out.println(&quot;static block count2:&quot; + count2); &#x2F;&#x2F; 1.4 count2&#x3D;2</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private SingleTon() &#123;</span><br><span class="line">        &#x2F;&#x2F; 1.3.1 连接-准备阶段 count1 &#x3D; 1</span><br><span class="line">        count1++;</span><br><span class="line">        &#x2F;&#x2F; 1.3.2 连接-准备阶段 count1 &#x3D; 2</span><br><span class="line">        count2++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        System.out.println(count1);</span><br><span class="line">        System.out.println(count2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h2><p>Object是所有类(包括数组)的基类，是唯一没有父类的类。<br>@startuml<br>class Object {<br>    # native Object clone()<br>    # native Object finalize()<br>    + final Class&lt;?&gt; getClass()<br>    + boolean equals(Object obj)<br>    + String toString()<br>    + native int hashCode()<br>    + final native void notify()<br>    + final native void notifyAll()<br>    + final native void wait()<br>    + final native void wait(long timeout)<br>    + final native void wait(long timeout, int nanos)<br>}<br>@enduml</p>
+<h2 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h2><hr>
+<p>Object是所有类(包括数组)的基类，是唯一没有父类的类。<br><img src="http://www.plantuml.com/plantuml/png/bOz1JeL038RtSuecRY1w1ACO3k324nGeK5BQo7GmQhox0HmNnZpoTas_R_v_MaN7nTCieHMC4PwRYLg7pm00S0EApYlbRIkcL9J_ifuLXJyolZqMK6-fzuyFC93lyozlp8HGWLuJIYn-OgoPil3Y2-i0RiUG7-PULeSHurXRzwSq6wjn1shE_Vkfy2HomNb3zZCijdsMPxBaLwXt-o6AQh4CNw4YxT8itm00" alt="bOz1JeL038RtSuecRY1w1ACO3k324nGeK5BQo7GmQhox0HmNnZpoTas_R_v_MaN7nTCieHMC4PwRYLg7pm00S0EApYlbRIkcL9J_ifuLXJyolZqMK6-fzuyFC93lyozlp8HGWLuJIYn-OgoPil3Y2-i0RiUG7-PULeSHurXRzwSq6wjn1shE_Vkfy2HomNb3zZCijdsMPxBaLwXt-o6AQh4CNw4YxT8itm00"></p>
 <h3 id="clone"><a href="#clone" class="headerlink" title="clone()"></a>clone()</h3><p>作用域是protected，若不重写该方法并声明为public则非类作用域中的对象则无法调用该方法。Cloneable接口只规定如果类没有实现该接口又调用了clone()，就会抛出CloneNotSupportedException。</p>
 <ul>
 <li>浅拷贝:拷贝对象和原始对象的引用类型引用同一个对象。</li>
@@ -383,7 +437,76 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">final Node&lt;K,V&gt; getNode(int hash, Object key) &#123;</span><br><span class="line">    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; first, e; int n; K k;</span><br><span class="line">    &#x2F;&#x2F; 1.判断Node数组table是否为空并数组长度大于0，且通过hashCode获取的数组下标位置元素不为空</span><br><span class="line">    if ((tab &#x3D; table) !&#x3D; null &amp;&amp; (n &#x3D; tab.length) &gt; 0 &amp;&amp;</span><br><span class="line">        (first &#x3D; tab[(n - 1) &amp; hash]) !&#x3D; null) &#123;</span><br><span class="line">        &#x2F;&#x2F; 2. A：判断hash获取的下标位置起的第一个Node元素hash值是否与参数的hash值相同、Node.key是否与Node参数key地址相同，B:或Node.key是否与参数key内容相同且参数key不为空，满足A或B其中一个条件则返回hash获取的下标位置起的第一个元素</span><br><span class="line">        if (first.hash &#x3D;&#x3D; hash &amp;&amp; &#x2F;&#x2F; always check first node</span><br><span class="line">            ((k &#x3D; first.key) &#x3D;&#x3D; key || (key !&#x3D; null &amp;&amp; key.equals(k))))</span><br><span class="line">            return first;</span><br><span class="line">        &#x2F;&#x2F; 如果hash获取指定下标的第一个Node并非所需要的Node，则根据Node元素的实例是否为TreeNode来确定查找方式</span><br><span class="line">        if ((e &#x3D; first.next) !&#x3D; null) &#123;</span><br><span class="line">                &#x2F;&#x2F; TreeNode查找方式获取指定key元素Node</span><br><span class="line">            if (first instanceof TreeNode)</span><br><span class="line">                return ((TreeNode&lt;K,V&gt;)first).getTreeNode(hash, key);</span><br><span class="line">            do &#123;</span><br><span class="line">                &#x2F;&#x2F; 链表方式查找指定key元素Node</span><br><span class="line">                if (e.hash &#x3D;&#x3D; hash &amp;&amp;</span><br><span class="line">                    ((k &#x3D; e.key) &#x3D;&#x3D; key || (key !&#x3D; null &amp;&amp; key.equals(k))))</span><br><span class="line">                    return e;</span><br><span class="line">            &#125; while ((e &#x3D; e.next) !&#x3D; null);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 HashMap通过hashCode确认了查找对象的大概位置，再根据hashCode与key确定对象的实际位置。可以理解为HashMap根据hashCode划分成一个个桶，每个桶里含相同hashCode的对象，通过hashCode确认对象的大概位置后，再通过等值判断(<code>==</code>或<code>equals()</code>)获取所需元素Node，所以集合类的对象都要主要重写hashCode方法。</li>
 </ul>
-<h3 id="equals-判断两个对象是否具有等价关系"><a href="#equals-判断两个对象是否具有等价关系" class="headerlink" title="equals():判断两个对象是否具有等价关系"></a>equals():判断两个对象是否具有等价关系</h3><h2 id="String"><a href="#String" class="headerlink" title="String"></a>String</h2><p>String被声明为final，因此是不可被继承的(Integer 等包装类也不能被继承）。</p>
+<h3 id="equals-判断两个对象是否具有等价关系"><a href="#equals-判断两个对象是否具有等价关系" class="headerlink" title="equals():判断两个对象是否具有等价关系"></a>equals():判断两个对象是否具有等价关系</h3><h2 id="String"><a href="#String" class="headerlink" title="String"></a>String</h2><hr>
+<p>String被声明为final，因此是不可被继承的(Integer 等包装类也不能被继承）。在 Java 8 中，String 内部使用<code>char</code>数组存储数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private final char value[];</span><br></pre></td></tr></table></figure>
+<p><code>value[]</code>被声明为 final，意味着<code>value[]</code>初始化之后就不能再引用其它数组。并且 String 内部没有改变<code>value[]</code>的方法，因此可以保证String不可变。不可变的特性可以使得 hash 值也不可变，使String十分适合作为集合类(如HashMap、HashSet)的哈希运算。<br>String有以下两种赋值方式</p>
+<ul>
+<li>字面量赋值(“Hello”字符串存到常量池中):<code>String str = &quot;Hello&quot;;</code></li>
+<li><code>new</code>创建新对象()：<code>String str = new String(&quot;Hello&quot;);</code>,new方式会在编译时期在String Pool中创建一个字符串对象指向字面量”Hello”(即字符串引用),在运行时会在堆中创建一个字符串对象，该字符串对象intern()返回该字符串字面量的引用。<br>字符串常量池（String Pool）保存着所有字符串常量，这些字面量在编译时期就确定，也可以使用 String的<code>intern()</code>方法在运行过程将字符串添加到String Pool中。在 Java 7 之前，String Pool 被放在运行时常量池中，它属于永久代。而在 Java 7，String Pool 被移到堆中，字符串常量池中存放的是字符串的引用。<br>如下例，通过字面量赋值时，加载阶段会在堆区中创建一个字符串对象”Hello”，同时在字符串池(String Pool)中存放一个它的引用，当赋值变量str时，虚拟机会去字符串池中查找是否含equals(“Hello”)的字符串，如为true则返回字符串池中的引用，如果找不到equals的字符串，就会在堆中新建一个对象，同时把引用驻留在字符串池，再把引用赋给str。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String str &#x3D; &quot;Hello&quot;;</span><br><span class="line">        String str2 &#x3D; “Hello”;</span><br><span class="line">        String str3 &#x3D; new String(&quot;Hello&quot;);</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/hexo-blog/Java%E5%9F%BA%E7%A1%80/String.png" alt="String.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">String s1 &#x3D; &quot;Hello&quot;;</span><br><span class="line">String s2 &#x3D; &quot;Hello&quot;;</span><br><span class="line">String s3 &#x3D; &quot;Hel&quot; + &quot;lo&quot;;</span><br><span class="line">String s4 &#x3D; &quot;Hel&quot; + new String(&quot;lo&quot;);</span><br><span class="line">String s5 &#x3D; new String(&quot;Hello&quot;);</span><br><span class="line">String s6 &#x3D; s5.intern();</span><br><span class="line">String s7 &#x3D; &quot;H&quot;;</span><br><span class="line">String s8 &#x3D; &quot;ello&quot;;</span><br><span class="line">String s9 &#x3D; s7 + s8;</span><br><span class="line">          </span><br><span class="line">System.out.println(s1 &#x3D;&#x3D; s2);  &#x2F;&#x2F; true</span><br><span class="line">System.out.println(s1 &#x3D;&#x3D; s3);  &#x2F;&#x2F; true   参与拼接的部分都是字面量，编译器会进行优化，在编译时s3就变成“Hello”了</span><br><span class="line">System.out.println(s1 &#x3D;&#x3D; s4);  &#x2F;&#x2F; false  &quot;lo&quot;通过new创建，所以无法在编译期知道它的地址，所以编译器无法进行优化</span><br><span class="line">System.out.println(s1 &#x3D;&#x3D; s9);  &#x2F;&#x2F; false  s9由两个变量拼接，编译期无法知道变量的具体地址</span><br><span class="line">System.out.println(s4 &#x3D;&#x3D; s5);  &#x2F;&#x2F; false   s5是new出来的，在堆中的地址肯定和s4不同</span><br><span class="line">System.out.println(s1 &#x3D;&#x3D; s6);  &#x2F;&#x2F; true    s6是s5字符串值&quot;Hello&quot;在常量池的引用，该引用与s1都指向同一个&quot;Hello&quot;对象，所以true</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>intern():如果字符串常量池中已经含与当前对象equals(object)为true的字符串，则返回池中的字符串引用；否则将当前String对象添加到字符串常量池中，并返回对当前String对象的引用。</li>
+</ul>
+<h3 id="String-StringBuffer和StringBuilder"><a href="#String-StringBuffer和StringBuilder" class="headerlink" title="String, StringBuffer和StringBuilder"></a>String, StringBuffer和StringBuilder</h3><ul>
+<li>String、StringBuffer和StringBuilder都是通过char数组存储数据，不过StringBuffer和StringBuilder的char数组可变的，没有被final修饰</li>
+<li>StringBuffer线程不安全，String由于其不可变所以是线程安全的，StringBuffer的方法都使用了synchronized同步所以是线程安全的</li>
+<li>String相加编译为字节码后都会新建StringBuilder来进行字符串拼接</li>
+</ul>
+<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h2><hr>
+<p>编译器在编译期间将类文件编译为字节码.class文件，在类运行的加载步骤中的加载阶段会根据<code>.class</code>文件生成对应的Class对象并存放到堆中，而字节流的静态存储结构则转化为方法区的运行时数据结构(存储如类的字段、方法等信息)。<br>反射可以提供运行时的类信息，并且这个类可以在运行时才加载进来，甚至在编译时期该类的<code>.class</code>不存在也可以加载进来。java反射相关类主要都在包java.lang.reflect下，反射相关常用类如下：</p>
+<ul>
+<li>Class：Class对象代表运行的Java应用中的类和接口(枚举enum是一种类,注解annotation是一种接口)，可以通过Class对象获取类和接口的信息(如类名、所在包、属性、方法、注解等)</li>
+<li>Field：提供有关类或接口的单个字段及对它们动态访问的信息(注解、类型)，可通过Class对象获取</li>
+<li>Method：提供有关类或接口上的单个方法的信息(参数、注解)，以及对单个方法的访问调用。反射获取的方法可以是类方法或实例的方法，调用<code>invoke()</code>方法调用。</li>
+<li>Constructor:提供类的构造函数信息(参数、注解)，并提供对此类的访问，通过调用该对象的<code>newInstance()</code>可以创建声明类的实例。</li>
+<li>Parameter：提供方法参数的信息(类型、注解)，可通过Method、Constructor对象获取。</li>
+</ul>
+<p>虽然反射的功能很强大，但也不该滥用，反射的缺点如下：</p>
+<ul>
+<li>增加性能开销：反射涉及了动态类型的解析，JVM无法对这些代码进行优化，因此反射效率比直接操作的效率是慢很多的</li>
+<li>安全性降低：由于反射可以执行一些正常情况下不被允许的操作(如访问私有属性和方法)，破坏了封装性</li>
+</ul>
+<h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><hr>
+<p>Throwable 是所有异常类的基类，java根据异常是否虚拟机异常将异常分为Error与Exception，Throwable的一级子类只有Error与Exception。</p>
+<ul>
+<li>Error：合理的应用程序不应尝试捕获的严重问题，一般是虚拟机的异常，如栈溢出(StackOverFlowError)、内存溢出(OutOfMemoryError)</li>
+<li>Exception：合理的应用程序可能需要捕获的异常，常见的Exception子类有SQLException、RuntimeException、IOException等<br><a href="http://www.plantuml.com/plantuml/uml/XOvDQe0m48Ntdi8BU8Ckx491gAO_fNGRuwXf9vaodLGBFNnB8mO4SHCUx_ioC-MdQ9RWC5Fz6nZ9RtwA8d-UcHRT8-JP7YEfc8cp_pSMB_RlkyPMczbwYFZG9Vb9j7bNNy0ZqbAj1Zx4aZ_tLH0rjk28lvDzk2Y1FMtB7kvEsMFmOXsSyaObjEK4QulGaTGK_92quyZeTW7ndgmNu2krGOH9uorFmO6NA_rrNPDIWX-2mry0" target="_blank" rel="noopener">PlantUML Web Server</a><br>Exception异常有两种处理方式：</li>
+<li>捕获处理：<code>try{} catch{}</code>捕捉处理且不抛出<code>throw</code>使程序正常运行</li>
+<li>抛出异常：通过<code>throw/throws</code>抛出异常将结束当前程序代码块的运行将异常抛给上游(方法调用方)，由上游进行处理，常见的业务异常可以通过Spring Boot的<code>@ControllerAdvice</code>定义全局异常拦截器</li>
+</ul>
+<h2 id="注解-Annotation"><a href="#注解-Annotation" class="headerlink" title="注解-Annotation"></a>注解-Annotation</h2><hr>
+<p>Annontation是JDK5引入的特性，用于将一些信息或元数据标注到程序元素（类、方法、成员变量、参数等），可以理解成程序元素的标签。注解标注的元数据可用于编译、类加载、运行时使用，元素的注解相关类都包含在<code>java.lang.annotation</code>包中。<br>注解本质是一个继承了 <code>java.lang.annotation.Annotation</code> 的特殊接口(注解即接口)，其具体实现类是Java 运行时生成的动态代理类。通过反射获取注解时，返回的是Java 运行时生成的动态代理对象$Proxy1。通过代理对象调用自定义注解（接口）的方法，最终会调用 <code>AnnotationInvocationHandler</code> 的invoke 方法，该方法会从memberValues 这个Map 中索引出对应的值，而memberValues 的来源是Java 常量池。</p>
+<h3 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h3><p><code>java.lang.annotation</code>提供了四种元注解，用于注解其他的注解(常用于自定义注解)：</p>
+<ul>
+<li><p>@Documented：注解是否将包含在JavaDoc中</p>
+</li>
+<li><p>@Retention：注解的保留时间，默认保留策略为<code>RetentionPolicy.CLASS</code>，注释可选的保留策略<code>RetentionPolicy</code>如下：</p>
+<ul>
+<li><code>SOURCE</code>：注解只在源文件中.java保留，编译后丢失(即编译后的.class文件将不包含注解)</li>
+<li><code>CLASS</code>：注解保留到编译文件，但VM不会在运行时保留这些注解</li>
+<li><code>RUNTIME</code>：注解由VM保留到程序运行期间，因此程序运行时可以通过反射获取这些注解信息</li>
+</ul>
+</li>
+<li><p>@Target：声明注解适用的范围，参数为<code>ElementType</code>注解范围枚举数组，<code>ElementType</code>常用枚举如下：</p>
+<ul>
+<li><code>TYPE</code>：类，接口（包括注解）或枚举</li>
+<li><code>FIELD</code>：字段</li>
+<li><code>METHOD</code>：方法</li>
+<li><code>PARAMETER</code>：参数</li>
+<li><code>CONSTRUCTOR</code>：构造函数</li>
+<li><code>LOCAL_VARIABLE</code>：本地变量</li>
+<li><code>ANNOTATION_TYPE</code>：注解</li>
+<li><code>PACKAGE</code>：包</li>
+</ul>
+</li>
+<li><p>@Inherited：声明注解是可继承的，如A类被可继承的注解B标注了，AA集成了A，则B注解也对A有效</p>
+</li>
+</ul>
 
     </div>
 
@@ -422,12 +545,12 @@ HashMap通过hashCode确认了查找对象的大概位置，再根据hashCode与
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/Spring%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86/" rel="prev" title="Spring面试题集">
-      <i class="fa fa-chevron-left"></i> Spring面试题集
+    <a href="/uml/" rel="prev" title="uml">
+      <i class="fa fa-chevron-left"></i> uml
     </a></div>
       <div class="post-nav-item">
-    <a href="/%E8%81%8A%E8%81%8Amq%E4%B8%8E%E5%A6%82%E4%BD%95%E5%9F%BA%E4%BA%8Espring%20boot%20RocketMQ%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%B6%88%E6%81%AF%E4%B8%AD%E5%BF%83/" rel="next" title="聊聊MQ与如何基于Spring Boot RocketMQ搭建一个消息中心">
-      聊聊MQ与如何基于Spring Boot RocketMQ搭建一个消息中心 <i class="fa fa-chevron-right"></i>
+    <a href="/index/" rel="next" title="一个普通程序猿的文章索引页">
+      一个普通程序猿的文章索引页 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -488,7 +611,7 @@ HashMap通过hashCode确认了查找对象的大概位置，再根据hashCode与
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据类型"><span class="nav-number">1.</span> <span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java中的8个基本类型"><span class="nav-number">1.1.</span> <span class="nav-text">Java中的8个基本类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用数据类型"><span class="nav-number">2.</span> <span class="nav-text">引用数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关键字"><span class="nav-number">3.</span> <span class="nav-text">关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#final：常量关键字"><span class="nav-number">3.1.</span> <span class="nav-text">final：常量关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#static：静态关键字"><span class="nav-number">3.2.</span> <span class="nav-text">static：静态关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#静态变量"><span class="nav-number">3.2.1.</span> <span class="nav-text">静态变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静态方法"><span class="nav-number">3.2.2.</span> <span class="nav-text">静态方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标识代码块：静态语句块"><span class="nav-number">3.2.3.</span> <span class="nav-text">标识代码块：静态语句块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静态内部类"><span class="nav-number">3.2.4.</span> <span class="nav-text">静态内部类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类初始化顺序"><span class="nav-number">3.2.5.</span> <span class="nav-text">类初始化顺序</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Object"><span class="nav-number">4.</span> <span class="nav-text">Object</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#clone"><span class="nav-number">4.1.</span> <span class="nav-text">clone()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hashCode"><span class="nav-number">4.2.</span> <span class="nav-text">hashCode()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#equals-判断两个对象是否具有等价关系"><span class="nav-number">4.3.</span> <span class="nav-text">equals():判断两个对象是否具有等价关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String"><span class="nav-number">5.</span> <span class="nav-text">String</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#面向对象编程的三大特性"><span class="nav-number">1.</span> <span class="nav-text">面向对象编程的三大特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#封装"><span class="nav-number">1.1.</span> <span class="nav-text">封装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#继承"><span class="nav-number">1.2.</span> <span class="nav-text">继承</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多态"><span class="nav-number">1.3.</span> <span class="nav-text">多态</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java的基本数据类型"><span class="nav-number">2.</span> <span class="nav-text">Java的基本数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用数据类型"><span class="nav-number">3.</span> <span class="nav-text">引用数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关键字"><span class="nav-number">4.</span> <span class="nav-text">关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#final：常量关键字"><span class="nav-number">4.1.</span> <span class="nav-text">final：常量关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#static：静态关键字"><span class="nav-number">4.2.</span> <span class="nav-text">static：静态关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#静态变量"><span class="nav-number">4.2.1.</span> <span class="nav-text">静态变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静态方法"><span class="nav-number">4.2.2.</span> <span class="nav-text">静态方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标识代码块：静态语句块"><span class="nav-number">4.2.3.</span> <span class="nav-text">标识代码块：静态语句块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静态内部类"><span class="nav-number">4.2.4.</span> <span class="nav-text">静态内部类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类初始化顺序"><span class="nav-number">4.2.5.</span> <span class="nav-text">类初始化顺序</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Object"><span class="nav-number">5.</span> <span class="nav-text">Object</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#clone"><span class="nav-number">5.1.</span> <span class="nav-text">clone()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hashCode"><span class="nav-number">5.2.</span> <span class="nav-text">hashCode()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#equals-判断两个对象是否具有等价关系"><span class="nav-number">5.3.</span> <span class="nav-text">equals():判断两个对象是否具有等价关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String"><span class="nav-number">6.</span> <span class="nav-text">String</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#String-StringBuffer和StringBuilder"><span class="nav-number">6.1.</span> <span class="nav-text">String, StringBuffer和StringBuilder</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反射"><span class="nav-number">7.</span> <span class="nav-text">反射</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异常"><span class="nav-number">8.</span> <span class="nav-text">异常</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注解-Annotation"><span class="nav-number">9.</span> <span class="nav-text">注解-Annotation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#元注解"><span class="nav-number">9.1.</span> <span class="nav-text">元注解</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -504,7 +627,7 @@ HashMap通过hashCode确认了查找对象的大概位置，再根据hashCode与
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
