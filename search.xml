@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Spring面试题集</title>
-    <url>/Spring%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86/</url>
-    <content><![CDATA[<h1 id="Spring的事务隔离级别"><a href="#Spring的事务隔离级别" class="headerlink" title="Spring的事务隔离级别"></a>Spring的事务隔离级别</h1>]]></content>
-      <categories>
-        <category>Spring</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>uml</title>
-    <url>/uml/</url>
-    <content><![CDATA[<p>Object</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">class Object &#123;</span><br><span class="line">    # native Object clone()</span><br><span class="line">    # native Object finalize()</span><br><span class="line">    + final Class&lt;?&gt; getClass()</span><br><span class="line">    + boolean equals(Object obj)</span><br><span class="line">    + String toString()</span><br><span class="line">    + native int hashCode()</span><br><span class="line">    + final native void notify()</span><br><span class="line">    + final native void notifyAll()</span><br><span class="line">    + final native void wait()</span><br><span class="line">    + final native void wait(long timeout)</span><br><span class="line">    + final native void wait(long timeout, int nanos)</span><br><span class="line">&#125;</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
-
-<p>Exception:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">Object &lt;|-- Throwable </span><br><span class="line">Throwable &lt;|-- Error</span><br><span class="line">Error &lt;|-- VirtualMachineError</span><br><span class="line">VirtualMachineError &lt;|-- StackOverflowException</span><br><span class="line">VirtualMachineError &lt;|-- OutOfMemoryException</span><br><span class="line">Throwable &lt;|-- Exception</span><br><span class="line">Exception &lt;|-- RuntimeException</span><br><span class="line">Exception &lt;|-- IOException</span><br><span class="line">IOException &lt;|-- FileNotFoundException</span><br><span class="line">RuntimeException &lt;|-- IOException</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
-
-<p>ArrayList:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">interface List&#123;&#125;</span><br><span class="line">interface RandomAccess&#123;&#125;</span><br><span class="line">interface Cloneable&#123;&#125;</span><br><span class="line">interface Collection&#123;&#125;</span><br><span class="line">interface Serializable&#123;&#125;</span><br><span class="line">class AbstractCollection&#123;&#125;</span><br><span class="line">class AbstractList&#123;</span><br><span class="line">    # transient int modCount</span><br><span class="line">&#125;</span><br><span class="line">class ArrayList&#123;</span><br><span class="line">    - static final int DEFAULT_CAPACITY</span><br><span class="line">    - static final Object[] EMPTY_ELEMENTDATA</span><br><span class="line">    - static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA</span><br><span class="line">    - static final int MAX_ARRAY_SIZE</span><br><span class="line">    - int size</span><br><span class="line">    # transient Object[] elementData</span><br><span class="line">    + boolean add(E e)</span><br><span class="line">    + boolean addAll(Collection&lt;? extends E&gt; c)</span><br><span class="line">    + boolean remove(E e)</span><br><span class="line">    + boolean remove(int index)</span><br><span class="line">    + E get(int index)</span><br><span class="line">    + int indexOf(Object o)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Collection &lt;|.. AbstractCollection</span><br><span class="line">AbstractCollection &lt;|-- AbstractList</span><br><span class="line">List &lt;|.. ArrayList</span><br><span class="line">List &lt;|.. AbstractList</span><br><span class="line">RandomAccess &lt;|..ArrayList</span><br><span class="line">AbstractList &lt;|.. ArrayList</span><br><span class="line">Cloneable &lt;|.. ArrayList</span><br><span class="line">Serializable &lt;|.. ArrayList</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
-
-<p>LinkedList:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">interface List&#123;&#125;</span><br><span class="line">interface Cloneable&#123;&#125;</span><br><span class="line">interface Serializable&#123;&#125;</span><br><span class="line">interface Deque&#123;</span><br><span class="line">  void addFirst(E e)</span><br><span class="line">  void addLast(E e)</span><br><span class="line">  E removeFirst()</span><br><span class="line">  E removeLast()</span><br><span class="line">  ...()</span><br><span class="line">&#125;</span><br><span class="line">interface Queue&#123;&#125;</span><br><span class="line">interface Collection&#123;&#125;</span><br><span class="line">Queue &lt;|-- Deque</span><br><span class="line">Collection &lt;|-- Queue</span><br><span class="line">class LinkedList&#123;</span><br><span class="line">    - static final int DEFAULT_CAPACITY</span><br><span class="line">    - static final Object[] EMPTY_ELEMENTDATA</span><br><span class="line">    - static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA</span><br><span class="line">    - static final int MAX_ARRAY_SIZE</span><br><span class="line">    - int size</span><br><span class="line">    # transient Object[] elementData</span><br><span class="line">    + boolean add(E e)</span><br><span class="line">    + boolean addAll(Collection&lt;? extends E&gt; c)</span><br><span class="line">    + boolean remove(E e)</span><br><span class="line">    + boolean remove(int index)</span><br><span class="line">    + E get(int index)</span><br><span class="line">    + int indexOf(Object o)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Deque &lt;|.. LinkedList</span><br><span class="line">Collection &lt;|-- List</span><br><span class="line">List &lt;|.. LinkedList</span><br><span class="line">AbstractSequentialList &lt;|-- LinkedList</span><br><span class="line">AbstractList &lt;|-- AbstractSequentialList </span><br><span class="line">AbstractCollection&lt;|-- AbstractList</span><br><span class="line">List &lt;|.. AbstractCollection</span><br><span class="line">Cloneable &lt;|.. LinkedList</span><br><span class="line">Serializable &lt;|.. LinkedList</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>]]></content>
-  </entry>
-  <entry>
     <title>RocketMQ概念模型</title>
     <url>/RocketMQ%E6%A6%82%E5%BF%B5%E6%A8%A1%E5%9E%8B/</url>
     <content><![CDATA[<blockquote>
@@ -188,6 +165,86 @@
       </tags>
   </entry>
   <entry>
+    <title>Spring面试题集</title>
+    <url>/Spring%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86/</url>
+    <content><![CDATA[<h1 id="Spring的事务隔离级别"><a href="#Spring的事务隔离级别" class="headerlink" title="Spring的事务隔离级别"></a>Spring的事务隔离级别</h1>]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>一个普通程序猿的文章索引页</title>
+    <url>/index/</url>
+    <content><![CDATA[<h1 id="JDK基础"><a href="#JDK基础" class="headerlink" title="JDK基础"></a>JDK基础</h1><ul>
+<li><a href="/java基础">Java基础</a></li>
+<li>Java常用集合<ul>
+<li><a href="/ArrayList">ArrayList</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="并发编程"><a href="#并发编程" class="headerlink" title="并发编程"></a>并发编程</h1><h1 id="框架文档"><a href="#框架文档" class="headerlink" title="框架文档"></a>框架文档</h1><ul>
+<li><a href="https://mybatis.plus/guide/" target="_blank" rel="noopener">Mybatis Plus</a></li>
+<li><a href="https://github.com/ctripcorp/apollo" target="_blank" rel="noopener">携程apollo</a></li>
+<li><a href="https://github.com/apache/rocketmq-spring/wiki" target="_blank" rel="noopener">rocketmq-spring</a></li>
+<li><a href="http://kafka.apachecn.org/" target="_blank" rel="noopener">Kafka</a></li>
+<li><a href="https://github.com/spring-projects/spring-boot/wiki" target="_blank" rel="noopener">Spring Boot Release Notes-了解新版特性</a></li>
+<li><a href="https://github.com/Wilson-He/swagger2-spring-boot-starter" target="_blank" rel="noopener">个人开源swagger2-spring-boot-starter框架</a></li>
+<li><a href="https://gitee.com/Wilson-He/generator-maven-plugin" target="_blank" rel="noopener">个人开源mybatis plus maven代码生成器插件</a></li>
+</ul>
+<h1 id="常用软件文档"><a href="#常用软件文档" class="headerlink" title="常用软件文档"></a>常用软件文档</h1><ul>
+<li><a href="https://dev.mysql.com/doc/" target="_blank" rel="noopener">MySQL</a></li>
+<li><a href="http://nginx.org/en/docs/" target="_blank" rel="noopener">Nginx</a></li>
+<li><a href="https://docs.docker.com/" target="_blank" rel="noopener">docker</a></li>
+<li><a href="https://hub.docker.com/u/library" target="_blank" rel="noopener">docker hub</a></li>
+<li><a href="https://jenkins.io/zh/doc/" target="_blank" rel="noopener">Jenkins</a></li>
+</ul>
+<h1 id="个人常用工具"><a href="#个人常用工具" class="headerlink" title="个人常用工具"></a>个人常用工具</h1><ul>
+<li><a href="http://www.baidu.com/link?url=HQhRL3UQ03YHc7-rGfijpY8aBYbgMOFkLCIiz2rVGwjAi3zwLviXMR3SgfoCMM2w&wd=&eqid=d2eb5eff0001257f000000065e85a396" target="_blank" rel="noopener">Postman</a></li>
+<li><a href="https://plugins.jetbrains.com/" target="_blank" rel="noopener">Intellij插件</a><ul>
+<li><a href="https://plugins.jetbrains.com/plugin/9837-mybatiscodehelperpro" target="_blank" rel="noopener">MyBatisCodeHelperPro</a></li>
+<li><a href="https://plugins.jetbrains.com/plugin/8579-translation" target="_blank" rel="noopener">Translation</a></li>
+<li><a href="https://plugins.jetbrains.com/plugin/6317-lombok" target="_blank" rel="noopener">Lombok</a></li>
+<li><a href="https://plugins.jetbrains.com/plugin/7179-maven-helper" target="_blank" rel="noopener">Maven Helper</a></li>
+<li><a href="https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines" target="_blank" rel="noopener">Alibaba Java Coding Guidelines</a></li>
+</ul>
+</li>
+<li><a href="https://boostnote.io/" target="_blank" rel="noopener">Markdown编辑器Boostnote</a><ul>
+<li><a href="https://github.com/BoostIO/Boostnote/wiki" target="_blank" rel="noopener">Wiki文档</a></li>
+<li><a href="http://plantuml.com/" target="_blank" rel="noopener">plantuml语法绘制UML文档</a></li>
+<li><a href="http://www.plantuml.com/plantuml/uml/SyfFKj2rKt3CoKnELR1Io4ZDoSa70000" target="_blank" rel="noopener">plantuml语法绘制UML网站</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="在线工具网站"><a href="#在线工具网站" class="headerlink" title="在线工具网站"></a>在线工具网站</h1><ul>
+<li><a href="https://linuxize.com/" target="_blank" rel="noopener">linux各软件安装教程</a></li>
+<li><a href="https://www.json.cn/" target="_blank" rel="noopener">json格式化</a></li>
+<li><a href="https://www.toyaml.com/index.html" target="_blank" rel="noopener">yaml与properties配置互转</a></li>
+</ul>
+<h1 id="书籍"><a href="#书籍" class="headerlink" title="书籍"></a>书籍</h1><ul>
+<li><a href="https://lingcoder.gitee.io/onjava8/#/" target="_blank" rel="noopener">《Java编程思想》Java 8</a></li>
+<li><a href="http://sjsdfg.gitee.io/effective-java-3rd-chinese/#/README" target="_blank" rel="noopener">《Effective Java》第三版</a></li>
+</ul>
+<h1 id="实战范例"><a href="#实战范例" class="headerlink" title="实战范例"></a>实战范例</h1><ul>
+<li><a href="/聊聊mq与如何基于spring%20boot%20RocketMQ搭建一个消息中心">聊聊MQ与如何基于Spring Boot RocketMQ搭建一个消息中心</a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>uml</title>
+    <url>/uml/</url>
+    <content><![CDATA[<p>Object</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">class Object &#123;</span><br><span class="line">    # native Object clone()</span><br><span class="line">    # native Object finalize()</span><br><span class="line">    + final Class&lt;?&gt; getClass()</span><br><span class="line">    + boolean equals(Object obj)</span><br><span class="line">    + String toString()</span><br><span class="line">    + native int hashCode()</span><br><span class="line">    + final native void notify()</span><br><span class="line">    + final native void notifyAll()</span><br><span class="line">    + final native void wait()</span><br><span class="line">    + final native void wait(long timeout)</span><br><span class="line">    + final native void wait(long timeout, int nanos)</span><br><span class="line">&#125;</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p>Exception:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">Object &lt;|-- Throwable </span><br><span class="line">Throwable &lt;|-- Error</span><br><span class="line">Error &lt;|-- VirtualMachineError</span><br><span class="line">VirtualMachineError &lt;|-- StackOverflowException</span><br><span class="line">VirtualMachineError &lt;|-- OutOfMemoryException</span><br><span class="line">Throwable &lt;|-- Exception</span><br><span class="line">Exception &lt;|-- RuntimeException</span><br><span class="line">Exception &lt;|-- IOException</span><br><span class="line">IOException &lt;|-- FileNotFoundException</span><br><span class="line">RuntimeException &lt;|-- IOException</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p>ArrayList:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">interface List&#123;&#125;</span><br><span class="line">interface RandomAccess&#123;&#125;</span><br><span class="line">interface Cloneable&#123;&#125;</span><br><span class="line">interface Collection&#123;&#125;</span><br><span class="line">interface Serializable&#123;&#125;</span><br><span class="line">class AbstractCollection&#123;&#125;</span><br><span class="line">class AbstractList&#123;</span><br><span class="line">    # transient int modCount</span><br><span class="line">&#125;</span><br><span class="line">class ArrayList&#123;</span><br><span class="line">    - static final int DEFAULT_CAPACITY</span><br><span class="line">    - static final Object[] EMPTY_ELEMENTDATA</span><br><span class="line">    - static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA</span><br><span class="line">    - static final int MAX_ARRAY_SIZE</span><br><span class="line">    - int size</span><br><span class="line">    # transient Object[] elementData</span><br><span class="line">    + boolean add(E e)</span><br><span class="line">    + boolean addAll(Collection&lt;? extends E&gt; c)</span><br><span class="line">    + boolean remove(E e)</span><br><span class="line">    + boolean remove(int index)</span><br><span class="line">    + E get(int index)</span><br><span class="line">    + int indexOf(Object o)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Collection &lt;|.. AbstractCollection</span><br><span class="line">AbstractCollection &lt;|-- AbstractList</span><br><span class="line">List &lt;|.. ArrayList</span><br><span class="line">List &lt;|.. AbstractList</span><br><span class="line">RandomAccess &lt;|..ArrayList</span><br><span class="line">AbstractList &lt;|.. ArrayList</span><br><span class="line">Cloneable &lt;|.. ArrayList</span><br><span class="line">Serializable &lt;|.. ArrayList</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p>LinkedList:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">interface List&#123;&#125;</span><br><span class="line">interface Cloneable&#123;&#125;</span><br><span class="line">interface Serializable&#123;&#125;</span><br><span class="line">interface Deque&#123;</span><br><span class="line">  void addFirst(E e)</span><br><span class="line">  void addLast(E e)</span><br><span class="line">  E removeFirst()</span><br><span class="line">  E removeLast()</span><br><span class="line">  ...()</span><br><span class="line">&#125;</span><br><span class="line">interface Queue&#123;&#125;</span><br><span class="line">interface Collection&#123;&#125;</span><br><span class="line">Queue &lt;|-- Deque</span><br><span class="line">Collection &lt;|-- Queue</span><br><span class="line">class LinkedList&#123;</span><br><span class="line">    - static final int DEFAULT_CAPACITY</span><br><span class="line">    - static final Object[] EMPTY_ELEMENTDATA</span><br><span class="line">    - static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA</span><br><span class="line">    - static final int MAX_ARRAY_SIZE</span><br><span class="line">    - int size</span><br><span class="line">    # transient Object[] elementData</span><br><span class="line">    + boolean add(E e)</span><br><span class="line">    + boolean addAll(Collection&lt;? extends E&gt; c)</span><br><span class="line">    + boolean remove(E e)</span><br><span class="line">    + boolean remove(int index)</span><br><span class="line">    + E get(int index)</span><br><span class="line">    + int indexOf(Object o)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Deque &lt;|.. LinkedList</span><br><span class="line">Collection &lt;|-- List</span><br><span class="line">List &lt;|.. LinkedList</span><br><span class="line">AbstractSequentialList &lt;|-- LinkedList</span><br><span class="line">AbstractList &lt;|-- AbstractSequentialList </span><br><span class="line">AbstractCollection&lt;|-- AbstractList</span><br><span class="line">List &lt;|.. AbstractCollection</span><br><span class="line">Cloneable &lt;|.. LinkedList</span><br><span class="line">Serializable &lt;|.. LinkedList</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>]]></content>
+  </entry>
+  <entry>
     <title>Markdown语法大全</title>
     <url>/%E5%88%AB%E6%A0%B7%E7%9A%84Markdown%E7%94%A8%E6%B3%95/</url>
     <content><![CDATA[<h1 id="Markdown基础语法"><a href="#Markdown基础语法" class="headerlink" title="Markdown基础语法"></a>Markdown基础语法</h1><p>#标识1-6级标题  </p>
@@ -273,63 +330,6 @@ code or text
         <td>111</td>
     </tr>
 </table>]]></content>
-  </entry>
-  <entry>
-    <title>一个普通程序猿的文章索引页</title>
-    <url>/index/</url>
-    <content><![CDATA[<h1 id="JDK基础"><a href="#JDK基础" class="headerlink" title="JDK基础"></a>JDK基础</h1><ul>
-<li><a href="/java基础">Java基础</a></li>
-<li>Java常用集合<ul>
-<li><a href="/ArrayList">ArrayList</a></li>
-</ul>
-</li>
-</ul>
-<h1 id="并发编程"><a href="#并发编程" class="headerlink" title="并发编程"></a>并发编程</h1><h1 id="框架文档"><a href="#框架文档" class="headerlink" title="框架文档"></a>框架文档</h1><ul>
-<li><a href="https://mybatis.plus/guide/" target="_blank" rel="noopener">Mybatis Plus</a></li>
-<li><a href="https://github.com/ctripcorp/apollo" target="_blank" rel="noopener">携程apollo</a></li>
-<li><a href="https://github.com/apache/rocketmq-spring/wiki" target="_blank" rel="noopener">rocketmq-spring</a></li>
-<li><a href="http://kafka.apachecn.org/" target="_blank" rel="noopener">Kafka</a></li>
-<li><a href="https://github.com/spring-projects/spring-boot/wiki" target="_blank" rel="noopener">Spring Boot Release Notes-了解新版特性</a></li>
-<li><a href="https://github.com/Wilson-He/swagger2-spring-boot-starter" target="_blank" rel="noopener">个人开源swagger2-spring-boot-starter框架</a></li>
-<li><a href="https://gitee.com/Wilson-He/generator-maven-plugin" target="_blank" rel="noopener">个人开源mybatis plus maven代码生成器插件</a></li>
-</ul>
-<h1 id="常用软件文档"><a href="#常用软件文档" class="headerlink" title="常用软件文档"></a>常用软件文档</h1><ul>
-<li><a href="https://dev.mysql.com/doc/" target="_blank" rel="noopener">MySQL</a></li>
-<li><a href="http://nginx.org/en/docs/" target="_blank" rel="noopener">Nginx</a></li>
-<li><a href="https://docs.docker.com/" target="_blank" rel="noopener">docker</a></li>
-<li><a href="https://hub.docker.com/u/library" target="_blank" rel="noopener">docker hub</a></li>
-<li><a href="https://jenkins.io/zh/doc/" target="_blank" rel="noopener">Jenkins</a></li>
-</ul>
-<h1 id="个人常用工具"><a href="#个人常用工具" class="headerlink" title="个人常用工具"></a>个人常用工具</h1><ul>
-<li><a href="http://www.baidu.com/link?url=HQhRL3UQ03YHc7-rGfijpY8aBYbgMOFkLCIiz2rVGwjAi3zwLviXMR3SgfoCMM2w&wd=&eqid=d2eb5eff0001257f000000065e85a396" target="_blank" rel="noopener">Postman</a></li>
-<li><a href="https://plugins.jetbrains.com/" target="_blank" rel="noopener">Intellij插件</a><ul>
-<li><a href="https://plugins.jetbrains.com/plugin/9837-mybatiscodehelperpro" target="_blank" rel="noopener">MyBatisCodeHelperPro</a></li>
-<li><a href="https://plugins.jetbrains.com/plugin/8579-translation" target="_blank" rel="noopener">Translation</a></li>
-<li><a href="https://plugins.jetbrains.com/plugin/6317-lombok" target="_blank" rel="noopener">Lombok</a></li>
-<li><a href="https://plugins.jetbrains.com/plugin/7179-maven-helper" target="_blank" rel="noopener">Maven Helper</a></li>
-<li><a href="https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines" target="_blank" rel="noopener">Alibaba Java Coding Guidelines</a></li>
-</ul>
-</li>
-<li><a href="https://boostnote.io/" target="_blank" rel="noopener">Markdown编辑器Boostnote</a><ul>
-<li><a href="https://github.com/BoostIO/Boostnote/wiki" target="_blank" rel="noopener">Wiki文档</a></li>
-<li><a href="http://plantuml.com/" target="_blank" rel="noopener">plantuml语法绘制UML文档</a></li>
-<li><a href="http://www.plantuml.com/plantuml/uml/SyfFKj2rKt3CoKnELR1Io4ZDoSa70000" target="_blank" rel="noopener">plantuml语法绘制UML网站</a></li>
-</ul>
-</li>
-</ul>
-<h1 id="在线工具网站"><a href="#在线工具网站" class="headerlink" title="在线工具网站"></a>在线工具网站</h1><ul>
-<li><a href="https://linuxize.com/" target="_blank" rel="noopener">linux各软件安装教程</a></li>
-<li><a href="https://www.json.cn/" target="_blank" rel="noopener">json格式化</a></li>
-<li><a href="https://www.toyaml.com/index.html" target="_blank" rel="noopener">yaml与properties配置互转</a></li>
-</ul>
-<h1 id="书籍"><a href="#书籍" class="headerlink" title="书籍"></a>书籍</h1><ul>
-<li><a href="https://lingcoder.gitee.io/onjava8/#/" target="_blank" rel="noopener">《Java编程思想》Java 8</a></li>
-<li><a href="http://sjsdfg.gitee.io/effective-java-3rd-chinese/#/README" target="_blank" rel="noopener">《Effective Java》第三版</a></li>
-</ul>
-<h1 id="实战范例"><a href="#实战范例" class="headerlink" title="实战范例"></a>实战范例</h1><ul>
-<li><a href="/聊聊mq与如何基于spring%20boot%20RocketMQ搭建一个消息中心">聊聊MQ与如何基于Spring Boot RocketMQ搭建一个消息中心</a></li>
-</ul>
-]]></content>
   </entry>
   <entry>
     <title>ArrayList源码分析</title>

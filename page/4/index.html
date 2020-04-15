@@ -195,7 +195,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/%E5%88%AB%E6%A0%B7%E7%9A%84Markdown%E7%94%A8%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/uml/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/atavar/wingsOfPiano.jpg">
@@ -209,7 +209,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/%E5%88%AB%E6%A0%B7%E7%9A%84Markdown%E7%94%A8%E6%B3%95/" class="post-title-link" itemprop="url">Markdown语法大全</a>
+            <a href="/uml/" class="post-title-link" itemprop="url">uml</a>
         </h1>
 
         <div class="post-meta">
@@ -225,89 +225,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Markdown基础语法"><a href="#Markdown基础语法" class="headerlink" title="Markdown基础语法"></a>Markdown基础语法</h1><p>#标识1-6级标题  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 一级标题</span><br><span class="line">## 二级标题</span><br><span class="line">### 三级标题</span><br><span class="line">#### 四级标题</span><br><span class="line">##### 五级标题</span><br><span class="line">###### 六级标题</span><br></pre></td></tr></table></figure>
-<p>换行：段落末尾添加两个或以上空格<br><em>字体样式</em>：</p>
-<ul>
-<li>斜体：<code>_斜体_</code>或<code>*斜体*</code></li>
-<li>粗体：<code>__加粗__</code>或<code>**加粗**</code></li>
-<li>斜体加粗：<code>***斜体加粗***</code>或<code>___斜体加粗___</code>  </li>
-<li>删除线： <code>~~删除线~~</code></li>
-<li>下划线： <code>&lt;u&gt;下划线&lt;/u&gt;</code></li>
-<li>脚注：  <code>文本[^脚注名]</code><br>列表(3种语法)：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">* 元素1</span><br><span class="line">* 元素2</span><br><span class="line"> </span><br><span class="line">- 元素1</span><br><span class="line">- 元素2</span><br><span class="line"> </span><br><span class="line">+ 元素1</span><br><span class="line">+ 元素2</span><br><span class="line"></span><br><span class="line">多级列表：</span><br><span class="line">- 一级列表1</span><br><span class="line">  - 二级列表1.1  </span><br><span class="line">    这里是二级列表  </span><br><span class="line">    - 三级列表1.1.1  </span><br><span class="line">    这里是三级列表</span><br><span class="line">  - 二级列表1.2</span><br></pre></td></tr></table></figure>
+          <p>Object</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">class Object &#123;</span><br><span class="line">    # native Object clone()</span><br><span class="line">    # native Object finalize()</span><br><span class="line">    + final Class&lt;?&gt; getClass()</span><br><span class="line">    + boolean equals(Object obj)</span><br><span class="line">    + String toString()</span><br><span class="line">    + native int hashCode()</span><br><span class="line">    + final native void notify()</span><br><span class="line">    + final native void notifyAll()</span><br><span class="line">    + final native void wait()</span><br><span class="line">    + final native void wait(long timeout)</span><br><span class="line">    + final native void wait(long timeout, int nanos)</span><br><span class="line">&#125;</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
 
-</li>
-</ul>
-<p>分割线：<code>---</code>、<code>- - -</code>、<code>&lt;hr&gt;</code>、<code>***</code>、<code>* * *</code><br>区块：<code>&gt; 文本内容</code>,区块可以有多级，根据 <code>&gt;</code> 个数确认级数，可以与列表语法互相嵌套，如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">列表嵌套区块：</span><br><span class="line">- 元素1</span><br><span class="line">  &gt; 一级区块</span><br><span class="line">  &gt;&gt; 二级区块</span><br><span class="line">  - 元素1.1</span><br><span class="line">- 元素2</span><br><span class="line">  - 元素2.1</span><br><span class="line">  &gt; 一级区块</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line"></span><br><span class="line">代码块(纯文本,&#96;&#96;&#96;后可选择语言,如java、javascript)： </span><br><span class="line">&lt;pre&gt;</span><br></pre></td></tr></table></figure>
-<p>// code or text</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;&#x2F;pre&gt;</span><br><span class="line">或</span><br></pre></td></tr></table></figure>
-<pre>
-code or text
-</pre>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">超链接： &#96;[个人blog](http:&#x2F;&#x2F;wilson-he.gitee.io&#x2F;)&#96;  </span><br><span class="line">插入图片：&#96;![description](url)&#96;,也可使用img标签&#96;&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;www.editplus.com&#x2F;ss&#x2F;editplus680x340.png&quot; width&#x3D;&quot;50%&quot; height&#x3D;&quot;30%&quot;&#x2F;&gt;&#96;  </span><br><span class="line">表格：</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th>表头</th>
-<th>表头</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>单元格</td>
-<td>单元格</td>
-</tr>
-<tr>
-<td>单元格</td>
-<td></td>
-</tr>
-<tr>
-<td>单元格</td>
-<td>单元格</td>
-</tr>
-<tr>
-<td>```</td>
-<td></td>
-</tr>
-<tr>
-<td>`</td>
-<td></td>
-</tr>
-<tr>
-<td>内容缩略：</td>
-<td></td>
-</tr>
-<tr>
-<td><details></td>
-<td></td>
-</tr>
-<tr>
-<td><summary>概况</summary></td>
-<td></td>
-</tr>
-<tr>
-<td>详细内容</td>
-<td></td>
-</tr>
-<tr>
-<td></details></td>
-<td></td>
-</tr>
-</tbody></table>
-<table>
-    <caption>标题</caption>
-    <tr>
-        <td>1</td>
-        <td>2</td>
-    </tr>
-    <tr>
-        <td>11</td>
-        <td>22</td>
-    </tr>
-    <tr>
-        <td>111</td>
-    </tr>
-</table>
+<p>Exception:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">Object &lt;|-- Throwable </span><br><span class="line">Throwable &lt;|-- Error</span><br><span class="line">Error &lt;|-- VirtualMachineError</span><br><span class="line">VirtualMachineError &lt;|-- StackOverflowException</span><br><span class="line">VirtualMachineError &lt;|-- OutOfMemoryException</span><br><span class="line">Throwable &lt;|-- Exception</span><br><span class="line">Exception &lt;|-- RuntimeException</span><br><span class="line">Exception &lt;|-- IOException</span><br><span class="line">IOException &lt;|-- FileNotFoundException</span><br><span class="line">RuntimeException &lt;|-- IOException</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p>ArrayList:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">interface List&#123;&#125;</span><br><span class="line">interface RandomAccess&#123;&#125;</span><br><span class="line">interface Cloneable&#123;&#125;</span><br><span class="line">interface Collection&#123;&#125;</span><br><span class="line">interface Serializable&#123;&#125;</span><br><span class="line">class AbstractCollection&#123;&#125;</span><br><span class="line">class AbstractList&#123;</span><br><span class="line">    # transient int modCount</span><br><span class="line">&#125;</span><br><span class="line">class ArrayList&#123;</span><br><span class="line">    - static final int DEFAULT_CAPACITY</span><br><span class="line">    - static final Object[] EMPTY_ELEMENTDATA</span><br><span class="line">    - static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA</span><br><span class="line">    - static final int MAX_ARRAY_SIZE</span><br><span class="line">    - int size</span><br><span class="line">    # transient Object[] elementData</span><br><span class="line">    + boolean add(E e)</span><br><span class="line">    + boolean addAll(Collection&lt;? extends E&gt; c)</span><br><span class="line">    + boolean remove(E e)</span><br><span class="line">    + boolean remove(int index)</span><br><span class="line">    + E get(int index)</span><br><span class="line">    + int indexOf(Object o)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Collection &lt;|.. AbstractCollection</span><br><span class="line">AbstractCollection &lt;|-- AbstractList</span><br><span class="line">List &lt;|.. ArrayList</span><br><span class="line">List &lt;|.. AbstractList</span><br><span class="line">RandomAccess &lt;|..ArrayList</span><br><span class="line">AbstractList &lt;|.. ArrayList</span><br><span class="line">Cloneable &lt;|.. ArrayList</span><br><span class="line">Serializable &lt;|.. ArrayList</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p>LinkedList:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">interface List&#123;&#125;</span><br><span class="line">interface Cloneable&#123;&#125;</span><br><span class="line">interface Serializable&#123;&#125;</span><br><span class="line">interface Deque&#123;</span><br><span class="line">  void addFirst(E e)</span><br><span class="line">  void addLast(E e)</span><br><span class="line">  E removeFirst()</span><br><span class="line">  E removeLast()</span><br><span class="line">  ...()</span><br><span class="line">&#125;</span><br><span class="line">interface Queue&#123;&#125;</span><br><span class="line">interface Collection&#123;&#125;</span><br><span class="line">Queue &lt;|-- Deque</span><br><span class="line">Collection &lt;|-- Queue</span><br><span class="line">class LinkedList&#123;</span><br><span class="line">    - static final int DEFAULT_CAPACITY</span><br><span class="line">    - static final Object[] EMPTY_ELEMENTDATA</span><br><span class="line">    - static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA</span><br><span class="line">    - static final int MAX_ARRAY_SIZE</span><br><span class="line">    - int size</span><br><span class="line">    # transient Object[] elementData</span><br><span class="line">    + boolean add(E e)</span><br><span class="line">    + boolean addAll(Collection&lt;? extends E&gt; c)</span><br><span class="line">    + boolean remove(E e)</span><br><span class="line">    + boolean remove(int index)</span><br><span class="line">    + E get(int index)</span><br><span class="line">    + int indexOf(Object o)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Deque &lt;|.. LinkedList</span><br><span class="line">Collection &lt;|-- List</span><br><span class="line">List &lt;|.. LinkedList</span><br><span class="line">AbstractSequentialList &lt;|-- LinkedList</span><br><span class="line">AbstractList &lt;|-- AbstractSequentialList </span><br><span class="line">AbstractCollection&lt;|-- AbstractList</span><br><span class="line">List &lt;|.. AbstractCollection</span><br><span class="line">Cloneable &lt;|.. LinkedList</span><br><span class="line">Serializable &lt;|.. LinkedList</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
       
     </div>
 
