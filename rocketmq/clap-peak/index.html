@@ -20,29 +20,41 @@
     var CONFIG = {"hostname":"wilson-he.gitee.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="一名普通的搬砖工">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Wilson Blog">
-<meta property="og:url" content="https://wilson-he.gitee.io/index.html">
+  <meta name="description" content="前言 MQ的主要特点为解耦、异步、削峰，该文章主要记录与分享个人在实际项目中的RocketMQ削峰用法，用于减少数据库压力的业务场景，其中RocketMQ的核心组件概念如下：  Producer：生产发送消息 Broker：存储Producer发送过来的消息 Consumer：从Broker拉取消息并进行消费 NameServer：为Producer或Consumer路由到Broker  其中消费">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实战：RocketMQ削峰，这一篇就够了">
+<meta property="og:url" content="https://wilson-he.gitee.io/rocketmq/clap-peak/index.html">
 <meta property="og:site_name" content="Wilson Blog">
-<meta property="og:description" content="一名普通的搬砖工">
+<meta property="og:description" content="前言 MQ的主要特点为解耦、异步、削峰，该文章主要记录与分享个人在实际项目中的RocketMQ削峰用法，用于减少数据库压力的业务场景，其中RocketMQ的核心组件概念如下：  Producer：生产发送消息 Broker：存储Producer发送过来的消息 Consumer：从Broker拉取消息并进行消费 NameServer：为Producer或Consumer路由到Broker  其中消费">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/4/23/171a64bf42ac7ea9?w=1055&h=432&f=png&s=186045">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/4/23/171a64bf42700dfa?w=926&h=345&f=png&s=48418">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/4/23/171a64bf4337d55e?w=659&h=262&f=png&s=12131">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/4/23/171a64bf438e7831?w=897&h=904&f=png&s=24582">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/4/23/171a64bf441c0acf?w=1272&h=710&f=png&s=26949">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/4/23/171a64bf443af9bd?w=351&h=844&f=png&s=35979">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/4/23/171a64bfb1a99596?w=1420&h=812&f=png&s=76251">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/4/23/171a64bfb2817a0f?w=1006&h=378&f=png&s=115111">
+<meta property="article:published_time" content="2020-04-23T09:30:09.002Z">
+<meta property="article:modified_time" content="2020-04-23T09:30:09.003Z">
 <meta property="article:author" content="Wilson He">
+<meta property="article:tag" content="RocketMQ">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2020/4/23/171a64bf42ac7ea9?w=1055&h=432&f=png&s=186045">
 
-<link rel="canonical" href="https://wilson-he.gitee.io/">
+<link rel="canonical" href="https://wilson-he.gitee.io/rocketmq/clap-peak/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false
+    isHome : false,
+    isPost : true
   };
 </script>
 
-  <title>Wilson Blog</title>
+  <title>实战：RocketMQ削峰，这一篇就够了 | Wilson Blog</title>
   
 
 
@@ -191,10 +203,10 @@
             
 
   <div class="posts-expand">
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/rocketmq/clap-peak/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -208,8 +220,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/rocketmq/clap-peak/" class="post-title-link" itemprop="url">实战：RocketMQ削峰，这一篇就够了</a>
+          实战：RocketMQ削峰，这一篇就够了
         </h1>
 
         <div class="post-meta">
@@ -234,7 +245,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><hr>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><hr>
 <p>MQ的主要特点为<strong>解耦</strong>、<strong>异步</strong>、<strong>削峰</strong>，该文章主要记录与分享个人在实际项目中的RocketMQ<strong>削峰</strong>用法，用于减少数据库压力的业务场景，其中RocketMQ的核心组件概念如下：</p>
 <ul>
 <li>Producer：生产发送消息</li>
@@ -292,27 +303,56 @@
 <li><a href="https://github.com/Wilson-He/spring-boot-series/tree/master/spring-rocketmq" target="_blank" rel="noopener">源码地址</a>，2m-noslave目录是该文章中例子中的2master broker配置与启动脚本，spring-boot-consumer-peak目录为包含该文章相关代码的实际例子</li>
 </ul>
 
-      
     </div>
 
     
     
     
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="Wilson He 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="Wilson He 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          <div class="post-tags">
+              <a href="/tags/RocketMQ/" rel="tag"># RocketMQ</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/rocketmq/message-center/" rel="prev" title="聊聊MQ与如何基于Spring Boot RocketMQ搭建一个消息中心">
+      <i class="fa fa-chevron-left"></i> 聊聊MQ与如何基于Spring Boot RocketMQ搭建一个消息中心
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
+    
   </article>
   
   
   
 
   </div>
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
-
 
 
           </div>
@@ -363,6 +403,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rocketmq-spring-boot-starter-用法简介"><span class="nav-number">2.</span> <span class="nav-text">rocketmq-spring-boot-starter 用法简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#业务案例"><span class="nav-number">3.</span> <span class="nav-text">业务案例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境配置"><span class="nav-number">3.1.</span> <span class="nav-text">环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加maven依赖"><span class="nav-number">3.1.1.</span> <span class="nav-text">添加maven依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#application-yml配置"><span class="nav-number">3.1.2.</span> <span class="nav-text">application.yml配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#点赞接口"><span class="nav-number">3.2.</span> <span class="nav-text">点赞接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PraiseListener：点赞消息消费者"><span class="nav-number">3.3.</span> <span class="nav-text">PraiseListener：点赞消息消费者</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#上线了但消费效率预估失误如何动态更改消费效率-？"><span class="nav-number">3.3.1.</span> <span class="nav-text">上线了但消费效率预估失误如何动态更改消费效率 ？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何使用RocketMQ批量消费-？"><span class="nav-number">3.3.2.</span> <span class="nav-text">如何使用RocketMQ批量消费 ？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#附本文相关信息"><span class="nav-number">4.</span> <span class="nav-text">附本文相关信息</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
