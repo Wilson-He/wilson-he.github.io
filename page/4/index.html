@@ -195,7 +195,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/UML/">
+    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/RocketMQ-Model/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/atavar/wingsOfPiano.jpg">
@@ -209,10 +209,19 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/UML/" class="post-title-link" itemprop="url">UML</a>
+            <a href="/RocketMQ-Model/" class="post-title-link" itemprop="url">RocketMQ概念模型</a>
         </h1>
 
         <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/RocketMQ/" itemprop="url" rel="index"><span itemprop="name">RocketMQ</span></a>
+                </span>
+            </span>
 
           
 
@@ -225,17 +234,158 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>Object</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">class Object &#123;</span><br><span class="line">    # native Object clone()</span><br><span class="line">    # native Object finalize()</span><br><span class="line">    + final Class&lt;?&gt; getClass()</span><br><span class="line">    + boolean equals(Object obj)</span><br><span class="line">    + String toString()</span><br><span class="line">    + native int hashCode()</span><br><span class="line">    + final native void notify()</span><br><span class="line">    + final native void notifyAll()</span><br><span class="line">    + final native void wait()</span><br><span class="line">    + final native void wait(long timeout)</span><br><span class="line">    + final native void wait(long timeout, int nanos)</span><br><span class="line">&#125;</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+          <blockquote>
+<h5 id="RocketMQ主要由-Producer、Broker、Consumer、NameServer四部分组成"><a href="#RocketMQ主要由-Producer、Broker、Consumer、NameServer四部分组成" class="headerlink" title="RocketMQ主要由 Producer、Broker、Consumer、NameServer四部分组成"></a>RocketMQ主要由 Producer、Broker、Consumer、NameServer四部分组成</h5><ul>
+<li>Producer 生产消息</li>
+<li>Consumer 从Broker读取消费消息</li>
+<li>Broker 存储Producer发送过来的消息</li>
+<li>NameServer 为Producer或Consumer路由消息到Broker<br>Broker 在实际部署过程中对应一台服务器，每个 Broker 可以存储多个Topic的消息，每个Topic的消息也可以分片存储于不同的 Broker。Message Queue 用于存储消息的物理地址，每个Topic中的消息地址存储于多个 Message Queue 中。ConsumerGroup 由多个Consumer 实例构成。RocketMQ启动顺序为先NameServer，再Broker。</li>
+</ul>
+</blockquote>
+<p><img src="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/RocketMQ/Model.png" alt="Model.png"></p>
+<ul>
+<li><h3 id="Topic与Queue"><a href="#Topic与Queue" class="headerlink" title="Topic与Queue"></a>Topic与Queue</h3><p>Topic是一类消息的集合，每个主题包含若干条消息，每条消息只能属于一个主题，是RocketMQ进行消息订阅的基本单位。<br>在RocketMQ中Queue是组成Topic的更小单元，集群消费模式下一个消费者只消费该Topic中部分Queue中的消息，当一个消费者开启广播模式时则会消费该Topic下所有Queue中的消息。</p>
+</li>
+<li><h3 id="Broker-Server-代理服务器"><a href="#Broker-Server-代理服务器" class="headerlink" title="Broker Server(代理服务器)"></a>Broker Server(代理服务器)</h3><p>消息中转角色，负责存储消息、转发消息。代理服务器在RocketMQ系统中负责接收从生产者发送来的消息并存储、同时为消费者的拉取请求作准备。代理服务器也存储消息相关的元数据，包括消费者组、消费进度偏移(offset)和主题(Topic)和队列消息等。</p>
+</li>
+<li><h3 id="Name-Server-名字服务"><a href="#Name-Server-名字服务" class="headerlink" title="Name Server(名字服务)"></a>Name Server(名字服务)</h3><p>名称服务充当路由消息的提供者。生产者或消费者能够通过名字服务查找各主题相应的Broker IP列表。多个Namesrv实例组成集群，但相互独立，没有信息交换。</p>
+</li>
+<li><h3 id="Producer-Group-生产者组"><a href="#Producer-Group-生产者组" class="headerlink" title="Producer Group(生产者组)"></a>Producer Group(生产者组)</h3><p>同一类Producer的集合，这类Producer发送同一类消息且发送逻辑一致。如果发送的是事物消息且原始生产者在发送之后崩溃，则Broker服务器会联系同一生产者组的其他生产者实例以提交或回溯消费。</p>
+</li>
+<li><h3 id="Consumer-Group-消费者组"><a href="#Consumer-Group-消费者组" class="headerlink" title="Consumer Group(消费者组)"></a>Consumer Group(消费者组)</h3><p>同一类Consumer的集合，这类Consumer通常消费同一类消息且消费逻辑一致。消费者组使得在消息消费方面，实现负载均衡和容错的目标变得非常容易。要注意的是，消费者组的消费者实例必须订阅完全相同的Topic。RocketMQ 支持两种消息模式：<em>集群消费（Clustering）</em> 和<em>广播消费（Broadcasting）</em>。</p>
+</li>
+<li><h3 id="Offset-Message-Queue下的offset"><a href="#Offset-Message-Queue下的offset" class="headerlink" title="Offset(Message Queue下的offset)"></a>Offset(Message Queue下的offset)</h3><ul>
+<li>max offset<br>MessageQueue中的max offset在源码中表示指消息的最大offset+1，即下条消息入队的位置。</li>
+<li>min offset<br>标识当前队列的最小offset。由于消息存储一段时间后，消费了的消息会从从磁盘物理删除，message queue的min offset也就对应增长，即比minOffset小的消息不存在broker上了。</li>
+<li>consumer offset<br>Consumer Group在MessageQueue上的消息消费进度，其实际值为队列中消费了的消息数+1，即表示下次拉取消息的位置。<br>DefaultMQPushConsumer.setConsumeFromWhere(ConsumerFromWhere)可设置从哪开始消费消息，但该设置的优先级在offset store后，当从offset store中读取不到offset的时候，ConsumerFromWhere的设置才生效。大部分该设置在ConsumerGroup初次启动时才有效(启动会一般会存储offset)，即使Consumer正常运行时重启，依旧会接着上次的offset(从offset store中获取)开始消费，ConsumeFromWhere的设置无效。</li>
+</ul>
+</li>
+<li><h3 id="Clustering-集群消费"><a href="#Clustering-集群消费" class="headerlink" title="Clustering(集群消费)"></a>Clustering(集群消费)</h3><p>集群消费模式下,相同Consumer Group的每个Consumer实例平均分摊消息。</p>
+</li>
+<li><h3 id="广播消费-Broadcasting"><a href="#广播消费-Broadcasting" class="headerlink" title="广播消费(Broadcasting)"></a>广播消费(Broadcasting)</h3><p>广播消费模式下，相同Consumer Group的每个Consumer实例都接收全量的消息。</p>
+</li>
+<li><h3 id="Normal-Ordered-Message-普通顺序消息"><a href="#Normal-Ordered-Message-普通顺序消息" class="headerlink" title="Normal Ordered Message(普通顺序消息)"></a>Normal Ordered Message(普通顺序消息)</h3><p>普通顺序消费模式下，消费者通过同一个消费队列收到的消息是有顺序的，不同消息队列收到的消息则可能是无顺序的。<br>如Broker Server将消息Msg_A、Msg_B、Msg_C按顺序发送到Topic_A主题上的队列Q_A、Q_B、Q_A，Consumer_A从订阅的Topic_A拉去消息的顺序可能为下：</p>
+<ul>
+<li>Msg_A-&gt;Msg_B-&gt;Msg_C</li>
+<li>Msg_B-&gt;Msg_A-&gt;Msg_C</li>
+<li>Msg_A-&gt;Msg_C-&gt;Msg_B<br>Msg_B进入队列Q_A在Msg_A之后，所以Msg_B必然在接收到Msg_A后才被发送</li>
+</ul>
+</li>
+<li><h3 id="Strictly-Ordered-Message-严格顺序消息"><a href="#Strictly-Ordered-Message-严格顺序消息" class="headerlink" title="Strictly Ordered Message(严格顺序消息)"></a>Strictly Ordered Message(严格顺序消息)</h3><p>严格顺序消息模式下，消费者收到的所有消息均是有顺序的。如上例中Consumer_A收到的顺序只会是Msg_A-&gt;Msg_B-&gt;Msg_C</p>
+</li>
+<li><h3 id="Message-消息"><a href="#Message-消息" class="headerlink" title="Message(消息)"></a>Message(消息)</h3><p>消息系统所传输信息的物理载体，生产和消费数据的最小单位，每条消息必须属于一个主题。RocketMQ中每个消息拥有唯一的Message ID，且可以携带具有业务标识的Key。系统提供了通过Message ID和Key查询消息的功能。常用属性：</p>
+<ul>
+<li>topic: 所属topic</li>
+<li>tags: 消息标签，用来做服务端消息过滤。一个topic下可以有很多tags，一般都通过topic+tags来消费自己想要的结果。</li>
+<li>keys: 消息关键词，查询消息使用</li>
+<li>body: 消息内容</li>
+</ul>
+</li>
+<li><h3 id="Tag-标签"><a href="#Tag-标签" class="headerlink" title="Tag(标签)"></a>Tag(标签)</h3><p>可理解为二级Topic，用于同一Topic下区分不同类型的消息。来自同一业务单元的消息，可以根据不同业务目的在同一Topic下设置不同标签。标签能够有效地保持代码的清晰度和连贯性，并优化RocketMQ提供的查询系统。消费者可以根据Tag实现对不同子Topic的不同消费逻辑，实现更好的扩展性。</p>
+</li>
+<li><h2 id="各MQ产品对比（译自RocketMQ官方对比）"><a href="#各MQ产品对比（译自RocketMQ官方对比）" class="headerlink" title="各MQ产品对比（译自RocketMQ官方对比）"></a>各MQ产品对比（译自RocketMQ官方对比）</h2></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>RocketMQ</th>
+<th>Kafka</th>
+<th>ActiveMQ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>客户端SDK</td>
+<td>Java，C ++，Go</td>
+<td>Java，Scala等</td>
+<td>Java，.NET，C ++等</td>
+</tr>
+<tr>
+<td>协议规范</td>
+<td>拉模型，支持TCP，JMS，OpenMessaging</td>
+<td>拉模型，支持TCP</td>
+<td>推送模型，支持OpenWire，STOMP，AMQP，MQTT，JMS</td>
+</tr>
+<tr>
+<td>消息排序</td>
+<td>确保对消息进行严格排序，并可以正常扩展</td>
+<td>确保分区内消息的顺序</td>
+<td>排他消费者或排他队列可确保顺序</td>
+</tr>
+<tr>
+<td>定时消息</td>
+<td>支持</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>批量消息</td>
+<td>支持，具有同步模式，可避免消息丢失</td>
+<td>支持，带异步Producer</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>广播消息</td>
+<td>支持</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>消息过滤器</td>
+<td>支持，基于SQL92的属性过滤器表达式过滤</td>
+<td>支持，使用kafka stream过滤</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>服务器触发重新交付</td>
+<td>支持</td>
+<td>不支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>消息存储</td>
+<td>高性能和低延迟文件存储</td>
+<td>高性能文件存储</td>
+<td>使用JDBC和高性能日志（例如levelDB，kahaDB）存储支持非常快速持久性</td>
+</tr>
+<tr>
+<td>消息追溯</td>
+<td>支持时间戳和偏移量追溯</td>
+<td>支持的偏移量追溯</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>消息优先级</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>高可用与故障切换</td>
+<td>支持主从模式</td>
+<td>支持，需额外配置ZooKeeper服务器</td>
+<td>支持，取决于存储，如果使用kahadb，则需要ZooKeeper服务器</td>
+</tr>
+<tr>
+<td>消息追踪</td>
+<td>支持</td>
+<td>不支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>配置特点</td>
+<td>开箱即用，用户只需要注意一些配置</td>
+<td>使用键值对格式进行配置，这些值可以从文件或以编程方式提供</td>
+<td>默认配置为低级别，用户需要优化配置参数</td>
+</tr>
+<tr>
+<td>操作管理工具</td>
+<td>支持，Web控制台和终端命令都可操作管理</td>
+<td>支持，使用终端命令管理</td>
+<td>支持</td>
+</tr>
+</tbody></table>
 
-<p>Exception:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">Object &lt;|-- Throwable </span><br><span class="line">Throwable &lt;|-- Error</span><br><span class="line">Error &lt;|-- VirtualMachineError</span><br><span class="line">VirtualMachineError &lt;|-- StackOverflowException</span><br><span class="line">VirtualMachineError &lt;|-- OutOfMemoryException</span><br><span class="line">Throwable &lt;|-- Exception</span><br><span class="line">Exception &lt;|-- RuntimeException</span><br><span class="line">Exception &lt;|-- IOException</span><br><span class="line">IOException &lt;|-- FileNotFoundException</span><br><span class="line">RuntimeException &lt;|-- IOException</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
-
-<p>ArrayList:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">interface List&#123;&#125;</span><br><span class="line">interface RandomAccess&#123;&#125;</span><br><span class="line">interface Cloneable&#123;&#125;</span><br><span class="line">interface Collection&#123;&#125;</span><br><span class="line">interface Serializable&#123;&#125;</span><br><span class="line">class AbstractCollection&#123;&#125;</span><br><span class="line">class AbstractList&#123;</span><br><span class="line">    # transient int modCount</span><br><span class="line">&#125;</span><br><span class="line">class ArrayList&#123;</span><br><span class="line">    - static final int DEFAULT_CAPACITY</span><br><span class="line">    - static final Object[] EMPTY_ELEMENTDATA</span><br><span class="line">    - static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA</span><br><span class="line">    - static final int MAX_ARRAY_SIZE</span><br><span class="line">    - int size</span><br><span class="line">    # transient Object[] elementData</span><br><span class="line">    + boolean add(E e)</span><br><span class="line">    + boolean addAll(Collection&lt;? extends E&gt; c)</span><br><span class="line">    + boolean remove(E e)</span><br><span class="line">    + boolean remove(int index)</span><br><span class="line">    + E get(int index)</span><br><span class="line">    + int indexOf(Object o)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Collection &lt;|.. AbstractCollection</span><br><span class="line">AbstractCollection &lt;|-- AbstractList</span><br><span class="line">List &lt;|.. ArrayList</span><br><span class="line">List &lt;|.. AbstractList</span><br><span class="line">RandomAccess &lt;|..ArrayList</span><br><span class="line">AbstractList &lt;|.. ArrayList</span><br><span class="line">Cloneable &lt;|.. ArrayList</span><br><span class="line">Serializable &lt;|.. ArrayList</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
-
-<p>LinkedList:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">interface List&#123;&#125;</span><br><span class="line">interface Cloneable&#123;&#125;</span><br><span class="line">interface Serializable&#123;&#125;</span><br><span class="line">class Node&#123;</span><br><span class="line">  E item</span><br><span class="line">  Node&lt;E&gt; next</span><br><span class="line">  Node&lt;E&gt; prev</span><br><span class="line">&#125;</span><br><span class="line">interface Deque&#123;</span><br><span class="line">  void addFirst(E e)</span><br><span class="line">  void addLast(E e)</span><br><span class="line">  E removeFirst()</span><br><span class="line">  E removeLast()</span><br><span class="line">  ...()</span><br><span class="line">&#125;</span><br><span class="line">interface Queue&#123;&#125;</span><br><span class="line">interface Collection&#123;&#125;</span><br><span class="line">Queue &lt;|-- Deque</span><br><span class="line">Collection &lt;|-- Queue</span><br><span class="line">class LinkedList&#123;</span><br><span class="line">    - transient int size</span><br><span class="line">    - transient Node&lt;E&gt; first</span><br><span class="line">    - transient Node&lt;E&gt; last</span><br><span class="line">    + boolean add(E e)</span><br><span class="line">    + boolean addAll(Collection&lt;? extends E&gt; c)</span><br><span class="line">    + boolean remove(E e)</span><br><span class="line">    + boolean remove(int index)</span><br><span class="line">    + E get(int index)</span><br><span class="line">    + int indexOf(Object o)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Deque &lt;|.. LinkedList</span><br><span class="line">Collection &lt;|-- List</span><br><span class="line">List &lt;|.. LinkedList</span><br><span class="line">AbstractSequentialList &lt;|-- LinkedList</span><br><span class="line">AbstractList &lt;|-- AbstractSequentialList </span><br><span class="line">AbstractCollection&lt;|-- AbstractList</span><br><span class="line">List &lt;|.. AbstractCollection</span><br><span class="line">Cloneable &lt;|.. LinkedList</span><br><span class="line">Serializable &lt;|.. LinkedList</span><br><span class="line">LinkedList +-- Node</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
       
     </div>
 
