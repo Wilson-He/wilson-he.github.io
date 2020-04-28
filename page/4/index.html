@@ -195,7 +195,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/RocketMQ-Model/">
+    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/rocketmq/clap-peak/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/atavar/wingsOfPiano.jpg">
@@ -209,7 +209,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/RocketMQ-Model/" class="post-title-link" itemprop="url">RocketMQ概念模型</a>
+            <a href="/rocketmq/clap-peak/" class="post-title-link" itemprop="url">实战：RocketMQ削峰，这一篇就够了</a>
         </h1>
 
         <div class="post-meta">
@@ -234,157 +234,59 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <blockquote>
-<h5 id="RocketMQ主要由-Producer、Broker、Consumer、NameServer四部分组成"><a href="#RocketMQ主要由-Producer、Broker、Consumer、NameServer四部分组成" class="headerlink" title="RocketMQ主要由 Producer、Broker、Consumer、NameServer四部分组成"></a>RocketMQ主要由 Producer、Broker、Consumer、NameServer四部分组成</h5><ul>
-<li>Producer 生产消息</li>
-<li>Consumer 从Broker读取消费消息</li>
-<li>Broker 存储Producer发送过来的消息</li>
-<li>NameServer 为Producer或Consumer路由消息到Broker<br>Broker 在实际部署过程中对应一台服务器，每个 Broker 可以存储多个Topic的消息，每个Topic的消息也可以分片存储于不同的 Broker。Message Queue 用于存储消息的物理地址，每个Topic中的消息地址存储于多个 Message Queue 中。ConsumerGroup 由多个Consumer 实例构成。RocketMQ启动顺序为先NameServer，再Broker。</li>
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>MQ的主要特点为<strong>解耦</strong>、<strong>异步</strong>、<strong>削峰</strong>，该文章主要记录与分享个人在实际项目中的RocketMQ<strong>削峰</strong>用法，用于减少数据库压力的业务场景，其中RocketMQ的核心组件概念如下：</p>
+<ul>
+<li>Producer：生产发送消息</li>
+<li>Broker：存储Producer发送过来的消息</li>
+<li>Consumer：从Broker拉取消息并进行消费</li>
+<li>NameServer：为Producer或Consumer路由到Broker<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmNDJhYzdlYTk?x-oss-process=image/format,png" alt="Model.png"></li>
 </ul>
+<p>其中消费流程有以下几点是必须注意的：</p>
+<ul>
+<li>RocketMQ的Consumer获取消息是通过向Broker发送拉取请求获取的，而不是由Broker发送Consumer接收的方式。</li>
+<li>Consumer每次拉取消息时消息都会被均匀分发到消息队列再进行传输，所以RocketMQ中的很多参数都是针对队列而不是Topic的(这个是重点，顺便吐槽下源码的文档讲的真不清晰，很多都需要自己试错，但Dashboard做得很好)，其中每个Broker消息队列(ConsumeQueue)的数量都可以通过RocketMQ DashBoard实时更改调整。</li>
+</ul>
+<h1 id="rocketmq-spring-boot-starter-用法简介"><a href="#rocketmq-spring-boot-starter-用法简介" class="headerlink" title="rocketmq-spring-boot-starter 用法简介"></a><a href="https://github.com/apache/rocketmq-spring" target="_blank" rel="noopener">rocketmq-spring-boot-starter</a> 用法简介</h1><p>当开发中需要快速集成RocketMQ时可以考虑使用 <a href="https://github.com/apache/rocketmq-spring" target="_blank" rel="noopener">rocketmq-spring-boot-starter</a> 搭建RocketMQ的集成环境，但该框架并不完全具备RocketMQ所有的配置简化，如需批量消费消息便需要自定义一个DefaultMQPushConsumer bean去消费了。<br>个人在开发中常用的<code>rocketmq-spring-boot-starter</code>相关类：</p>
+<ul>
+<li><code>RocketMQListener</code>接口：消费者都需实现该接口的消费方法<code>onMessage(msg)</code>。</li>
+<li><code>RocketMQPushConsumerLifecycleListener</code>接口：当<code>@RocketMQMessageListener</code>中的配置不足以满足我们的需求时，可以实现该接口直接更改消费者类<code>DefaultMQPushConsumer</code>配置</li>
+<li><code>@RocketMQMessageListener</code>：被该注解标注并实现了接口<code>RocketMQListener</code>的bean为一个消费者并监听指定topic队列中的消息，该注解中包含消费者的一些常用配置(大部分按默认即可)，一般只需更改consumerGroup(消费组)与topic。<code>RocketMQMessageListener</code>中的属性配置是可以使用Placeholder(占位符)从配置文件或配置中心获取的，如下图：<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmNDI3MDBkZmE?x-oss-process=image/format,png" alt="RocketMQMessageListener.png"></li>
+</ul>
+<h1 id="业务案例"><a href="#业务案例" class="headerlink" title="业务案例"></a>业务案例</h1><p>有一个点赞业务，不限制用户的点赞数只需进行记录(产品需求，开发提议无效)，当每个用户都进行x连击享受数量猛增的快感时如果数据库都需要进行x个点赞数据的插入，数据库毫无疑问会塞死导致崩溃。于是想到可以尝试下MQ削峰，比如每秒来了5000消息但数据库只能承受2000，那我消费时每次只拉取消费1600就好了，剩下的放在Broker堆积慢慢消费就好。由于之前的消息中心也在用RocketMQ，于是确认使用RocketMQ来进行削峰。</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmNDMzN2Q1NWU?x-oss-process=image/format,png" alt="praise-clap-peak.png"></p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><blockquote>
+<p>文章例子环境：1NameServer + 2Broker + 1Consumer</p>
 </blockquote>
-<p><img src="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/RocketMQ/Model.png" alt="Model.png"></p>
+<h3 id="添加maven依赖"><a href="#添加maven依赖" class="headerlink" title="添加maven依赖"></a>添加maven依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.rocketmq&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;rocketmq-spring-boot-starter&lt;&#x2F;artifactId&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="application-yml配置"><a href="#application-yml配置" class="headerlink" title="application.yml配置"></a>application.yml配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">rocketmq:</span><br><span class="line">  name-server: 127.0.0.1:9876</span><br><span class="line">  producer:</span><br><span class="line">    group: praise-group</span><br><span class="line">server:</span><br><span class="line">  port: 10000</span><br><span class="line"></span><br><span class="line">spring:</span><br><span class="line">  datasource:</span><br><span class="line">    driver-class-name: com.mysql.cj.jdbc.Driver</span><br><span class="line">    username: root</span><br><span class="line">    password: tiger</span><br><span class="line">    url: jdbc:mysql:&#x2F;&#x2F;localhost:3306&#x2F;wilson</span><br><span class="line">swagger:</span><br><span class="line">  docket:</span><br><span class="line">    base-package: io.rocket.consumer.controller</span><br></pre></td></tr></table></figure>
+
+<h2 id="点赞接口"><a href="#点赞接口" class="headerlink" title="点赞接口"></a>点赞接口</h2><p><strong>PraiseRecord(点赞记录):</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Data</span><br><span class="line">public class PraiseRecord implements Serializable &#123;</span><br><span class="line">    private Long id;</span><br><span class="line">    private Long uid;</span><br><span class="line">    private Long liveId;</span><br><span class="line">    private LocalDateTime createTime;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>MessageController(简单的测试接口):</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">RestController</span><br><span class="line">@RequestMapping(&quot;&#x2F;message&quot;)</span><br><span class="line">public class MessageController &#123;</span><br><span class="line">    @Resource</span><br><span class="line">    private RocketMQTemplate rocketMQTemplate;</span><br><span class="line"></span><br><span class="line">    @PostMapping(&quot;&#x2F;praise&quot;)</span><br><span class="line">    public ServerResponse praise(@RequestBody PraiseRecordVO vo) &#123;</span><br><span class="line">        rocketMQTemplate.sendOneWay(RocketConstant.Topic.PRAISE_TOPIC, MessageBuilder.withPayload(vo).build());</span><br><span class="line">        return ServerResponse.success();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; ......</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于用户可以连续点赞，所以考虑可以在点赞消息的处理上宽松一点(容许消息丢失)以追求更高的性能，因此选择使用<code>sendOneyWay()</code>进行消息发送。</p>
+<blockquote>
+<p>RocketMQ的消息发送方式主要含syncSend()同步发送、asyncSend()异步发送、sendOneWay()三种方式，sendOneWay()也是异步发送，区别在于不需等待Broker返回确认，所以可能会存在信息丢失的状况，但吞吐量更高，具体需根据业务情况选用。性能：sendOneWay &gt; asyncSend &gt; syncSend<br>RocketMQTemplate的send()方法默认是同步(syncSend)的,更多可看源码实现。</p>
+</blockquote>
+<h2 id="PraiseListener：点赞消息消费者"><a href="#PraiseListener：点赞消息消费者" class="headerlink" title="PraiseListener：点赞消息消费者"></a>PraiseListener：点赞消息消费者</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">@RocketMQMessageListener(topic &#x3D; RocketConstant.Topic.PRAISE_TOPIC, consumerGroup &#x3D; RocketConstant.ConsumerGroup.PRAISE_CONSUMER)</span><br><span class="line">@Slf4j</span><br><span class="line">public class PraiseListener implements RocketMQListener&lt;PraiseRecordVO&gt;, RocketMQPushConsumerLifecycleListener &#123;</span><br><span class="line">    @Resource</span><br><span class="line">    private PraiseRecordService praiseRecordService;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onMessage(PraiseRecordVO vo) &#123;</span><br><span class="line">        praiseRecordService.insert(vo.copyProperties(PraiseRecord::new));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void prepareStart(DefaultMQPushConsumer consumer) &#123;</span><br><span class="line">        &#x2F;&#x2F; 每次拉取的间隔，单位为毫秒</span><br><span class="line">        consumer.setPullInterval(2000);</span><br><span class="line">        &#x2F;&#x2F; 设置每次从队列中拉取的消息数为16</span><br><span class="line">        consumer.setPullBatchSize(16);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>单次pull消息的最大数目受broker存储的<code>MessageStoreConfig.maxTransferCountOnMessageInMemory</code>(默认为32)值限制，即若想要消费者从队列拉取的消息数大于32有效(pullBatchSize&gt;32)则需更改Broker的启动参数<code>maxTransferCountOnMessageInMemory</code>值。在MQ削峰的配置参数里，以下几个<code>DefaultMQPushConsumer</code>的参数是需要注意一下的：</p>
 <ul>
-<li><h3 id="Topic与Queue"><a href="#Topic与Queue" class="headerlink" title="Topic与Queue"></a>Topic与Queue</h3><p>Topic是一类消息的集合，每个主题包含若干条消息，每条消息只能属于一个主题，是RocketMQ进行消息订阅的基本单位。<br>在RocketMQ中Queue是组成Topic的更小单元，集群消费模式下一个消费者只消费该Topic中部分Queue中的消息，当一个消费者开启广播模式时则会消费该Topic下所有Queue中的消息。</p>
-</li>
-<li><h3 id="Broker-Server-代理服务器"><a href="#Broker-Server-代理服务器" class="headerlink" title="Broker Server(代理服务器)"></a>Broker Server(代理服务器)</h3><p>消息中转角色，负责存储消息、转发消息。代理服务器在RocketMQ系统中负责接收从生产者发送来的消息并存储、同时为消费者的拉取请求作准备。代理服务器也存储消息相关的元数据，包括消费者组、消费进度偏移(offset)和主题(Topic)和队列消息等。</p>
-</li>
-<li><h3 id="Name-Server-名字服务"><a href="#Name-Server-名字服务" class="headerlink" title="Name Server(名字服务)"></a>Name Server(名字服务)</h3><p>名称服务充当路由消息的提供者。生产者或消费者能够通过名字服务查找各主题相应的Broker IP列表。多个Namesrv实例组成集群，但相互独立，没有信息交换。</p>
-</li>
-<li><h3 id="Producer-Group-生产者组"><a href="#Producer-Group-生产者组" class="headerlink" title="Producer Group(生产者组)"></a>Producer Group(生产者组)</h3><p>同一类Producer的集合，这类Producer发送同一类消息且发送逻辑一致。如果发送的是事物消息且原始生产者在发送之后崩溃，则Broker服务器会联系同一生产者组的其他生产者实例以提交或回溯消费。</p>
-</li>
-<li><h3 id="Consumer-Group-消费者组"><a href="#Consumer-Group-消费者组" class="headerlink" title="Consumer Group(消费者组)"></a>Consumer Group(消费者组)</h3><p>同一类Consumer的集合，这类Consumer通常消费同一类消息且消费逻辑一致。消费者组使得在消息消费方面，实现负载均衡和容错的目标变得非常容易。要注意的是，消费者组的消费者实例必须订阅完全相同的Topic。RocketMQ 支持两种消息模式：<em>集群消费（Clustering）</em> 和<em>广播消费（Broadcasting）</em>。</p>
-</li>
-<li><h3 id="Offset-Message-Queue下的offset"><a href="#Offset-Message-Queue下的offset" class="headerlink" title="Offset(Message Queue下的offset)"></a>Offset(Message Queue下的offset)</h3><ul>
-<li>max offset<br>MessageQueue中的max offset在源码中表示指消息的最大offset+1，即下条消息入队的位置。</li>
-<li>min offset<br>标识当前队列的最小offset。由于消息存储一段时间后，消费了的消息会从从磁盘物理删除，message queue的min offset也就对应增长，即比minOffset小的消息不存在broker上了。</li>
-<li>consumer offset<br>Consumer Group在MessageQueue上的消息消费进度，其实际值为队列中消费了的消息数+1，即表示下次拉取消息的位置。<br>DefaultMQPushConsumer.setConsumeFromWhere(ConsumerFromWhere)可设置从哪开始消费消息，但该设置的优先级在offset store后，当从offset store中读取不到offset的时候，ConsumerFromWhere的设置才生效。大部分该设置在ConsumerGroup初次启动时才有效(启动会一般会存储offset)，即使Consumer正常运行时重启，依旧会接着上次的offset(从offset store中获取)开始消费，ConsumeFromWhere的设置无效。</li>
+<li>pullInterval：每次从Broker拉取消息的间隔，单位为毫秒</li>
+<li>pullBatchSize：每次从Broker队列拉取到的消息数，该参数很容易让人误解，一开始我以为是每次拉取的消息总数，但测试过几次后确认了实质上是从每个队列的拉取数(源码上的注释文档真的很差，跟没有一样)，即Consume每次拉取的消息总数如下：<br><code>EachPullTotal=所有Broker上的写队列数和(writeQueueNums=readQueueNums) * pullBatchSize</code></li>
+<li>consumeMessageBatchMaxSize：每次消费(即将多条消息合并为List消费)的最大消息数目，默认值为1，<a href="https://github.com/apache/rocketmq-spring" target="_blank" rel="noopener">rocketmq-spring-boot-starter</a> 目前不支持批量消费(2.1.0版本)</li>
 </ul>
-</li>
-<li><h3 id="Clustering-集群消费"><a href="#Clustering-集群消费" class="headerlink" title="Clustering(集群消费)"></a>Clustering(集群消费)</h3><p>集群消费模式下,相同Consumer Group的每个Consumer实例平均分摊消息。</p>
-</li>
-<li><h3 id="广播消费-Broadcasting"><a href="#广播消费-Broadcasting" class="headerlink" title="广播消费(Broadcasting)"></a>广播消费(Broadcasting)</h3><p>广播消费模式下，相同Consumer Group的每个Consumer实例都接收全量的消息。</p>
-</li>
-<li><h3 id="Normal-Ordered-Message-普通顺序消息"><a href="#Normal-Ordered-Message-普通顺序消息" class="headerlink" title="Normal Ordered Message(普通顺序消息)"></a>Normal Ordered Message(普通顺序消息)</h3><p>普通顺序消费模式下，消费者通过同一个消费队列收到的消息是有顺序的，不同消息队列收到的消息则可能是无顺序的。<br>如Broker Server将消息Msg_A、Msg_B、Msg_C按顺序发送到Topic_A主题上的队列Q_A、Q_B、Q_A，Consumer_A从订阅的Topic_A拉去消息的顺序可能为下：</p>
-<ul>
-<li>Msg_A-&gt;Msg_B-&gt;Msg_C</li>
-<li>Msg_B-&gt;Msg_A-&gt;Msg_C</li>
-<li>Msg_A-&gt;Msg_C-&gt;Msg_B<br>Msg_B进入队列Q_A在Msg_A之后，所以Msg_B必然在接收到Msg_A后才被发送</li>
+<p>在消费者开始消息消费时会先从各队列中拉取一条消息进行消费，消费成功后再以每次pullBatchSize的数目进行拉取。</p>
+<p>PraiseListener中设置了每次拉取的间隔为2s，每次从队列拉取的消息数为16，在搭建了2master broker且broker上writeQueueNums=readQueueNums=4的环境下每次拉取的消息理论数值为16 * 2 * 4 = 128，在第一次从各队列拉取1条消息(即共8条)后消费成功后会每次就会拉取最多128条消息进行消费，想验证下的可以把onMessage()的insert()改为log.info(“1”)然后统计单位秒内打印的日志数是否为128。<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmNDM4ZTc4MzE?x-oss-process=image/format,png" alt="praise-topic.png"></p>
+<p>根据以上配置单Conumer情况下每2s理论消费为128，即每2秒数据库新增的点赞数据大概为128条左右，有20%偏差都在个人可接受范围内，然后对点赞接口进行简单压测1s 2000请求校验MQ效果，根据消费配置理论上需要16次拉取即需32s才能消费完，压测后查看数据库校验效果：<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmNDQxYzBhY2Y?x-oss-process=image/format,png" alt="praise-jmeter.png"><br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmNDQzYWY5YmQ?x-oss-process=image/format,png" alt="praise-jmeter-db.png"><br>由上图可以看出除第一次2s和最后一次2s外数据库每2s的插入数据数和一般都在128附近波动，也用了34s(因第一次拉取数较少所以比理论多花费一次拉取)消费的偏差大小可能会受每次拉取数pullBatchSize、Broker上的消息队列数、网络波动等情况影响，但需要的目的已经达到了，我只想把单位时间内过多的数据库操作交给MQ做分隔成多个单位时间内的小批量操作，消息过多就堆积，当请求峰值过了后直到MQ堆积的消息消费完前数据库的插入数依旧会与峰值期的插入数相差不大，达到了MQ削峰填谷的效果。</p>
+<h3 id="上线了但消费效率预估失误如何动态更改消费效率-？"><a href="#上线了但消费效率预估失误如何动态更改消费效率-？" class="headerlink" title="上线了但消费效率预估失误如何动态更改消费效率 ？"></a>上线了但消费效率预估失误如何动态更改消费效率 ？</h3><p>当把拉取数pullBatchSize设置Broker的默认最大传输值32了，线上又不想重启Broker更改maxTransferCountOnMessageInMemory参数，如有2个Broker且queue都为4，那么拉取消费效率才为32 * 2 * 4 = 256，如果想要动态调整，可以从Broker数或Broker队列数下手，可以将Broker的writeQueueNums、readQueueNums增大，如都改为8，那么效率就成了32 * 2 * 8 = 512。需要注意的是更改完queues后必须去Dashboard的Topic下的CONSUMER MANAGER查看新增的队列上是否都有Consumer成功注册上去了，因为遇到了在测试与生产上使用rocketmq-spring-boot-starter @RocketMQListener标注消费者不会自动注册到新队列上的情况，但没排除是不是RocketMQ版本的原因(个人本地的版本比环境上的高了一个小版本0.0.1，本地没出现没消费者注册到新队列上的问题)，而是使用了自定义DefaultMQPushConsumer bean(原生的方式都是没有问题的)的备用方案。当再启动新的消费者应用时CONSUMER MANAGER(下图)中就会出现 新Consumer数 * 各Broker队列数和的队列行。<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmYjFhOTk1OTY?x-oss-process=image/format,png" alt="praise-topic-consumer.png"></p>
+<h3 id="如何使用RocketMQ批量消费-？"><a href="#如何使用RocketMQ批量消费-？" class="headerlink" title="如何使用RocketMQ批量消费 ？"></a>如何使用RocketMQ批量消费 ？</h3><p>虽然点赞业务使用MQ单条插入后TPS已经达到当前业务指标要求了，但考虑到如果后续要求在不添加机器数的情况下增加TPS，且数据量还没到分库分表的程度，个人就打算从批量消费下手，由一次插入一条点赞记录改为一次性插入多条(insertBatch)。当然能满足现有需求能不做肯定不做的，过度优化过分碍事，但想多点方案不会坏事。rocketmq-spring-boot-starter并没有提供批量消费的功能，所以要批量消费消息需要自定义<code>DefaultMQPushConsumer</code>并配置其<code>consumeMessageBatchMaxSize</code>属性。<code>consumeMessageBatchMaxSize</code>属性默认值为1，即每次只消费一条消息，需要注意的是该属性也会受<code>pullBatchSize</code>影响，如果<code>consumeMessageBatchMaxSize</code>为32但<code>pullBatchSize</code>只为12，那么每次批量消费的最大消息数也就只有12。<br>如下为个人测试批量消费Consumer的测试bean：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">@Bean</span><br><span class="line">public DefaultMQPushConsumer userMQPushConsumer() throws MQClientException &#123;</span><br><span class="line">    DefaultMQPushConsumer consumer &#x3D; new DefaultMQPushConsumer(RocketConstant.ConsumerGroup.SPRING_BOOT_USER_CONSUMER);</span><br><span class="line">    consumer.setNamesrvAddr(nameServer);</span><br><span class="line">    consumer.subscribe(RocketConstant.Topic.SPRING_BOOT_USER_TOPIC, &quot;*&quot;);</span><br><span class="line">    &#x2F;&#x2F; 设置每次消息拉取的时间间隔，单位毫秒</span><br><span class="line">    consumer.setPullInterval(1000);</span><br><span class="line">    &#x2F;&#x2F; 设置每个队列每次拉取的最大消息数</span><br><span class="line">    consumer.setPullBatchSize(24);</span><br><span class="line">    &#x2F;&#x2F; 设置消费者单次批量消费的消息数目上限</span><br><span class="line">    consumer.setConsumeMessageBatchMaxSize(12);</span><br><span class="line">    consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context)</span><br><span class="line">            -&gt; &#123;</span><br><span class="line">        List&lt;UserInfo&gt; userInfos &#x3D; new ArrayList&lt;&gt;(msgs.size());</span><br><span class="line">        Map&lt;Integer, Integer&gt; queueMsgMap &#x3D; new HashMap&lt;&gt;(8);</span><br><span class="line">        msgs.forEach(msg -&gt; &#123;</span><br><span class="line">            userInfos.add(JSONObject.parseObject(msg.getBody(), UserInfo.class));</span><br><span class="line">            queueMsgMap.compute(msg.getQueueId(), (key, val) -&gt; val &#x3D;&#x3D; null ? 1 : ++val);</span><br><span class="line">        &#125;);</span><br><span class="line">        log.info(&quot;userInfo size: &#123;&#125;, content: &#123;&#125;&quot;, userInfos.size(), userInfos);</span><br><span class="line">        &#x2F;*</span><br><span class="line">          处理批量消息，如批量插入：userInfoMapper.insertBatch(userInfos);</span><br><span class="line">         *&#x2F;</span><br><span class="line">        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;</span><br><span class="line">    &#125;);</span><br><span class="line">    consumer.start();</span><br><span class="line">    return consumer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果默认配置情况下log打印出的userInfo size恒为1，但由于设置了<code>consumeMessageBatchMaxSize</code>与<code>pullBatchSize</code>，且<code>pullBatchSize</code>较小，所以每次消费的消息数最大值为12，如下图：<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmYjI4MTdhMGY?x-oss-process=image/format,png" alt="consume-batch.png"></p>
+<h1 id="附本文相关信息"><a href="#附本文相关信息" class="headerlink" title="附本文相关信息"></a>附本文相关信息</h1><ul>
+<li>确保mqnamesrv与mqbroker已启动成功，如该文章环境的启动：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mqnamesrv -n 127.0.0.1:9876</span><br><span class="line">mqbroker -c E:\RocketMQ\rocketmq-all-4.5.2-bin-release\bin\2m-noslave\broker-a.properties</span><br><span class="line">mqbroker -c E:\RocketMQ\rocketmq-all-4.5.2-bin-release\bin\2m-noslave\broker-b.properties</span><br></pre></td></tr></table></figure></li>
+<li>RocketMQ DashBoard启动流程可参考<a href="https://github.com/apache/rocketmq-externals/tree/master/rocketmq-console" target="_blank" rel="noopener">官方github文档</a>或到<a href="https://download.csdn.net/download/z28126308/12355342" target="_blank" rel="noopener">我的资源</a>里下载jar包运行</li>
+<li><a href="https://github.com/Wilson-He/spring-boot-series/tree/master/spring-rocketmq" target="_blank" rel="noopener">源码地址</a>，2m-noslave目录是该文章中例子中的2master broker配置与启动脚本，spring-boot-consumer-peak目录为包含该文章相关代码的实际例子</li>
 </ul>
-</li>
-<li><h3 id="Strictly-Ordered-Message-严格顺序消息"><a href="#Strictly-Ordered-Message-严格顺序消息" class="headerlink" title="Strictly Ordered Message(严格顺序消息)"></a>Strictly Ordered Message(严格顺序消息)</h3><p>严格顺序消息模式下，消费者收到的所有消息均是有顺序的。如上例中Consumer_A收到的顺序只会是Msg_A-&gt;Msg_B-&gt;Msg_C</p>
-</li>
-<li><h3 id="Message-消息"><a href="#Message-消息" class="headerlink" title="Message(消息)"></a>Message(消息)</h3><p>消息系统所传输信息的物理载体，生产和消费数据的最小单位，每条消息必须属于一个主题。RocketMQ中每个消息拥有唯一的Message ID，且可以携带具有业务标识的Key。系统提供了通过Message ID和Key查询消息的功能。常用属性：</p>
-<ul>
-<li>topic: 所属topic</li>
-<li>tags: 消息标签，用来做服务端消息过滤。一个topic下可以有很多tags，一般都通过topic+tags来消费自己想要的结果。</li>
-<li>keys: 消息关键词，查询消息使用</li>
-<li>body: 消息内容</li>
-</ul>
-</li>
-<li><h3 id="Tag-标签"><a href="#Tag-标签" class="headerlink" title="Tag(标签)"></a>Tag(标签)</h3><p>可理解为二级Topic，用于同一Topic下区分不同类型的消息。来自同一业务单元的消息，可以根据不同业务目的在同一Topic下设置不同标签。标签能够有效地保持代码的清晰度和连贯性，并优化RocketMQ提供的查询系统。消费者可以根据Tag实现对不同子Topic的不同消费逻辑，实现更好的扩展性。</p>
-</li>
-<li><h2 id="各MQ产品对比（译自RocketMQ官方对比）"><a href="#各MQ产品对比（译自RocketMQ官方对比）" class="headerlink" title="各MQ产品对比（译自RocketMQ官方对比）"></a>各MQ产品对比（译自RocketMQ官方对比）</h2></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>RocketMQ</th>
-<th>Kafka</th>
-<th>ActiveMQ</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>客户端SDK</td>
-<td>Java，C ++，Go</td>
-<td>Java，Scala等</td>
-<td>Java，.NET，C ++等</td>
-</tr>
-<tr>
-<td>协议规范</td>
-<td>拉模型，支持TCP，JMS，OpenMessaging</td>
-<td>拉模型，支持TCP</td>
-<td>推送模型，支持OpenWire，STOMP，AMQP，MQTT，JMS</td>
-</tr>
-<tr>
-<td>消息排序</td>
-<td>确保对消息进行严格排序，并可以正常扩展</td>
-<td>确保分区内消息的顺序</td>
-<td>排他消费者或排他队列可确保顺序</td>
-</tr>
-<tr>
-<td>定时消息</td>
-<td>支持</td>
-<td>不支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>批量消息</td>
-<td>支持，具有同步模式，可避免消息丢失</td>
-<td>支持，带异步Producer</td>
-<td>不支持</td>
-</tr>
-<tr>
-<td>广播消息</td>
-<td>支持</td>
-<td>不支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>消息过滤器</td>
-<td>支持，基于SQL92的属性过滤器表达式过滤</td>
-<td>支持，使用kafka stream过滤</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>服务器触发重新交付</td>
-<td>支持</td>
-<td>不支持</td>
-<td>不支持</td>
-</tr>
-<tr>
-<td>消息存储</td>
-<td>高性能和低延迟文件存储</td>
-<td>高性能文件存储</td>
-<td>使用JDBC和高性能日志（例如levelDB，kahaDB）存储支持非常快速持久性</td>
-</tr>
-<tr>
-<td>消息追溯</td>
-<td>支持时间戳和偏移量追溯</td>
-<td>支持的偏移量追溯</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>消息优先级</td>
-<td>不支持</td>
-<td>不支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>高可用与故障切换</td>
-<td>支持主从模式</td>
-<td>支持，需额外配置ZooKeeper服务器</td>
-<td>支持，取决于存储，如果使用kahadb，则需要ZooKeeper服务器</td>
-</tr>
-<tr>
-<td>消息追踪</td>
-<td>支持</td>
-<td>不支持</td>
-<td>不支持</td>
-</tr>
-<tr>
-<td>配置特点</td>
-<td>开箱即用，用户只需要注意一些配置</td>
-<td>使用键值对格式进行配置，这些值可以从文件或以编程方式提供</td>
-<td>默认配置为低级别，用户需要优化配置参数</td>
-</tr>
-<tr>
-<td>操作管理工具</td>
-<td>支持，Web控制台和终端命令都可操作管理</td>
-<td>支持，使用终端命令管理</td>
-<td>支持</td>
-</tr>
-</tbody></table>
 
       
     </div>
@@ -404,7 +306,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -472,20 +374,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
