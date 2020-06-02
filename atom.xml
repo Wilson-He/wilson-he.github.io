@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wilson-he.gitee.io/"/>
-  <updated>2020-06-01T09:00:18.692Z</updated>
+  <updated>2020-06-02T06:11:54.385Z</updated>
   <id>https://wilson-he.gitee.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>个人导航页</title>
+    <link href="https://wilson-he.gitee.io/private-nav/"/>
+    <id>https://wilson-he.gitee.io/private-nav/</id>
+    <published>2020-06-02T06:11:54.385Z</published>
+    <updated>2020-06-02T06:11:54.385Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="在线工具"><a href="#在线工具" class="headerlink" title="在线工具"></a>在线工具</h1><table><thead><tr><th>版本控制</th><th><a href="https://github.com/Wilson-He" target="_blank" rel="noopener">github</a></th><th><a href="https://gitee.com/Wilson-He" target="_blank" rel="noopener">gitee</a></th><th></th></tr></thead><tbody><tr><td>画图</td><td><a href="http://www.plantuml.com/plantuml/uml/SyfFKj2rKt3CoKnELR1Io4ZDoSa70000" target="_blank" rel="noopener">UML绘制</a></td><td><a href="https://www.processon.com/diagrams" target="_blank" rel="noopener">ProcessOn</a></td><td></td></tr><tr><td>其它</td><td><a href="https://www.toyaml.com/index1.html" target="_blank" rel="noopener">properties、yaml互转</a></td><td><a href="http://111.229.4.194/tools/swagger-ui.html" target="_blank" rel="noopener">字符串操作</a></td><td><a href="https://linuxize.com/" target="_blank" rel="noopener">linux软件安装教程</a></td></tr></tbody></table><h1 id="Chrome-简洁版"><a href="#Chrome-简洁版" class="headerlink" title="Chrome(简洁版)"></a>Chrome(<a href="https://chrome.zzzmh.cn/index#index" target="_blank" rel="noopener">简洁版</a>)</h1><p>插件：油猴Tampermonkey、掘金、IDM、ModifyHeader、OneTab、Image Downloader、Allow Copy、Axure<br><a href="https://greasyfork.org/zh-CN" target="_blank" rel="noopener">油猴脚本搜索</a>：百度云盘HTML5视频倍速播放、网盘直链下载助手</p><h1 id="动漫电影"><a href="#动漫电影" class="headerlink" title="动漫电影"></a>动漫电影</h1><p>|动漫|<a href="http://www.milimili.tv/" target="_blank" rel="noopener">咪哩咪哩</a>|<a href="http://www.bimibimi.me/" target="_blank" rel="noopener">哔咪哔咪</a>|<br>|-|-|<br>|电影||</p><h1 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h1><table><thead><tr><th>框架</th><th>软件</th></tr></thead><tbody><tr><td><a href="https://spring.io/" target="_blank" rel="noopener">Spring</a></td><td><a href="https://dev.mysql.com/doc/" target="_blank" rel="noopener">MySQL</a></td></tr><tr><td><a href="https://mybatis.plus/guide/" target="_blank" rel="noopener">Mybatis Plus</a></td><td><a href="http://nginx.org/en/docs/" target="_blank" rel="noopener">Nginx</a></td></tr><tr><td><a href="https://github.com/spring-projects/spring-boot/wiki" target="_blank" rel="noopener">Spring Boot Release Notes-了解新版特性</a></td><td><a href="http://nginx.org/en/docs/" target="_blank" rel="noopener">Nginx</a></td></tr><tr><td><a href="https://github.com/apache/rocketmq-spring/wiki" target="_blank" rel="noopener">rocketmq-spring</a></td><td><a href="https://docs.docker.com/" target="_blank" rel="noopener">docker</a></td></tr><tr><td><a href="https://github.com/ctripcorp/apollo" target="_blank" rel="noopener">携程apollo</a></td><td><a href="https://hub.docker.com/u/library" target="_blank" rel="noopener">docker hub</a></td></tr><tr><td><a href="http://kafka.apachecn.org/" target="_blank" rel="noopener">Kafka</a></td><td><a href="https://docs.docker.com/compose/gettingstarted/" target="_blank" rel="noopener">Docker Compose</a></td></tr><tr><td></td><td><a href="https://jenkins.io/zh/doc/" target="_blank" rel="noopener">Jenkins</a></td></tr><tr><td></td><td><a href="https://docs.mongodb.com/manual/crud/" target="_blank" rel="noopener">MongoDB指令</a></td></tr><tr><td></td><td><a href="https://theme-next.org/docs/getting-started/" target="_blank" rel="noopener">Next主题文档</a></td></tr></tbody></table>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;在线工具&quot;&gt;&lt;a href=&quot;#在线工具&quot; class=&quot;headerlink&quot; title=&quot;在线工具&quot;&gt;&lt;/a&gt;在线工具&lt;/h1&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;版本控制&lt;/th&gt;
+&lt;th&gt;&lt;a href=&quot;https://github.co
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>一个普通程序猿的文章索引页</title>

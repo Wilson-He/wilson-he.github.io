@@ -195,7 +195,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/rocketmq/clap-peak/">
+    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/null/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/atavar/wingsOfPiano.jpg">
@@ -209,7 +209,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/rocketmq/clap-peak/" class="post-title-link" itemprop="url">实战：RocketMQ削峰，这一篇就够了</a>
+            <a href="/null/" class="post-title-link" itemprop="url">谈谈个人对JDK函数式编程的认知与使用</a>
         </h1>
 
         <div class="post-meta">
@@ -219,7 +219,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/RocketMQ/" itemprop="url" rel="index"><span itemprop="name">RocketMQ</span></a>
+                  <a href="/categories/Java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">Java基础</span></a>
                 </span>
             </span>
 
@@ -234,59 +234,485 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>MQ的主要特点为<strong>解耦</strong>、<strong>异步</strong>、<strong>削峰</strong>，该文章主要记录与分享个人在实际项目中的RocketMQ<strong>削峰</strong>用法，用于减少数据库压力的业务场景，其中RocketMQ的核心组件概念如下：</p>
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>该文章主要介绍JDK中各种常见的函数式接口，并会附上一些个人对函数式编程的一些扩展思考与实际用法。</p>
+<h1 id="常见的函数式接口介绍"><a href="#常见的函数式接口介绍" class="headerlink" title="常见的函数式接口介绍"></a>常见的函数式接口介绍</h1><p>jdk1.8的函数式接口都在rt.jar中<code>java.util.function</code>包下，以下以jdk集合类与个人常用的接口进行介绍：</p>
 <ul>
-<li>Producer：生产发送消息</li>
-<li>Broker：存储Producer发送过来的消息</li>
-<li>Consumer：从Broker拉取消息并进行消费</li>
-<li>NameServer：为Producer或Consumer路由到Broker<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmNDJhYzdlYTk?x-oss-process=image/format,png" alt="Model.png"></li>
+<li><p><code>Function&lt;T,R&gt;</code>：传入类型为T的对象并执行含返回值(返回值为R-return类型)的指定方法，方法可临时实现。常见于类Optional<code>{map();flatMap();}</code>、Stream<code>{map();flatMap();}</code>、Comparator<code>{thenComparing();}</code>等，MybatisPlus 3.0版本之后的<code>SFunction</code>接口与该接口作用相同，区别在于添加了序列化，使开发者可通过传入getter Function匹配对应字段而无需再写字段名进行匹配，免除字段名写错的问题。</p>
+</li>
+<li><p><code>BiFunction&lt;T,U,R&gt;</code>：传入类型为T、U类型(T、U可以相同)的两个对象并执行含返回值的指定方法，方法可临时实现。常见于类Stream<code>{reduce();}</code>、Map<code>{replaceAll();computeIfPresent();compute();merge();}</code>等。</p>
+</li>
+<li><p><code>Consumer&lt;T&gt;</code>：传入单个对象并执行对象中无返回值的指定方法，方法可临时实现。常见于类List<code>{foreach();}</code>、Stream<code>{foreach();}</code>、Optional<code>{ifPresent();}</code>等。</p>
+</li>
+<li><p><code>BiConsumer&lt;T, U&gt;</code>：传入两个对象并执行对象中无返回值的指定方法，方法可临时实现。常见于类Stream<code>{collect();}</code>、Map<code>{foreach();}</code>等。</p>
+</li>
+<li><p><code>Supplier&lt;T&gt;</code>：供应商接口，可理解为对象的无参构造函数代理接口，每次调用其get()方法都会产生一个新的对象。常见于类Stream<code>{generate();collect();}</code>Objects<code>{requireNonNull();}</code>、ThreadLocal<code>{withInitial();}</code></p>
+</li>
+<li><p><code>Predicate&lt;T&gt;</code>：传入一个对象返回其指定行为方法执行结果布尔值，方法可临时实现。常见于类Optional<code>{filter();}</code>、Stream<code>{filter();anyMatch();allMatch();noneMatch();}</code>、ArrayList<code>{removeIf();}</code>等</p>
+</li>
+<li><p><code>BiPredicate&lt;T, U&gt;</code>：可根据前面的Bi接口与<code>Predicate</code>推断，不再多作阐述</p>
+</li>
 </ul>
-<p>其中消费流程有以下几点是必须注意的：</p>
-<ul>
-<li>RocketMQ的Consumer获取消息是通过向Broker发送拉取请求获取的，而不是由Broker发送Consumer接收的方式。</li>
-<li>Consumer每次拉取消息时消息都会被均匀分发到消息队列再进行传输，所以RocketMQ中的很多参数都是针对队列而不是Topic的(这个是重点，顺便吐槽下源码的文档讲的真不清晰，很多都需要自己试错，但Dashboard做得很好)，其中每个Broker消息队列(ConsumeQueue)的数量都可以通过RocketMQ DashBoard实时更改调整。</li>
+<h1 id="常见的函数式接口用法"><a href="#常见的函数式接口用法" class="headerlink" title="常见的函数式接口用法"></a>常见的函数式接口用法</h1><p><strong>Stream中的函数式编程</strong></p>
+<p>以下先以一段代码简单的介绍jdk中的函数式用法：</p>
+<pre><code>List&lt;String&gt; list = Lists.newArrayList(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;);
+String result = list.stream()
+                .filter(str -&gt; !StringUtils.equals(str, &quot;c&quot;))   // ① 参数为Predicate&lt;? super String&gt;,返回值为Stream&lt;String&gt;
+                .map(str -&gt; str + &quot;,&quot;)   // ② 参数为Function&lt;? super String, ? extends String&gt;,返回值为Stream&lt;String&gt;
+                .reduce((current, next) -&gt; current + next) // ③ 参数为BinaryOperator&lt;String&gt;,返回值为Optional&lt;String&gt;
+                .orElse(&quot;&quot;);</code></pre><p>List转为Stream后Stream中的泛型都会对应为List元素的类型，以下为上面几个stream对象方法的简单讲解：<br>①：实现了一个<code>Predicate&lt;String&gt;</code>接口，并让Stream对象调用该接口的实现操作去过滤获取列表中元素值不为<code>&quot;c&quot;</code>的元素<br>②:  实现了一个<code>Function&lt;String,String&gt;</code>接口，在每个元素末尾添加字符串”,”，并返回添加后的结果<br>③： 实现了一个<code>BinaryOperator&lt;String&gt;</code>接口，将stream的当前元素与下一个元素进行拼接并返回拼接结果。<code>BinaryOperator&lt;T&gt;</code>是<code>BiFunction&lt;T,U,R&gt;</code>的子接口，在2个参数类型与返回类型都相同的情况下可使用BinaryOperator接口替代<code>BiFunction</code>接口，但两个接口实质上都需要实现apply()方法进行操作并返回结果，并无太大区别，可把<code>BinaryOperator</code>当<code>成BiFunction</code>的一个子集，其定义如下：</p>
+<pre><code>@FunctionalInterface
+public interface BinaryOperator&lt;T&gt; extends BiFunction&lt;T,T,T&gt; {
+    ......
+}</code></pre><p>单看以上代码可能还无法体现出为什么叫函数式编程的原因，现在把以上代码还原为为函数实现显示样式：</p>
+<pre><code>String result = list.stream()
+        .filter(new Predicate&lt;String&gt;() {
+            @Override
+            public boolean test(String s) {
+                return !StringUtils.equals(s, &quot;c&quot;);
+            }
+        })
+        .map(new Function&lt;String, String&gt;() {
+            @Override
+            public String apply(String s) {
+                return s + &quot;,&quot;;
+            }
+        })
+        .reduce(new BinaryOperator&lt;String&gt;() {
+            @Override
+            public String apply(String current, String next) {
+                return current + next;
+            }
+        })
+        .orElse(&quot;&quot;);</code></pre><p>两段的执行代码都可编译执行，对比可知第一段代码只是对第二段代码的简化，第二段代码中详细的显示了对列表转stream后的操作实现了哪些接口与实现的函数操作，显得十分臃肿，而第一段代码只显示了实现的函数操作，故个人认为将重点放在函数实现操作便是函数式编程的核心。<br>相信各个读者都发现了所有函数式接口所需实现的函数都有且仅有一个，个人认为目的除了更优雅的显示以外，还可以让程序知道即使我传入的是一个函数式接口实现类，程序依然会清楚它还要再去执行该类型的指定函数。</p>
+<p><strong>List中的函数式编程</strong><br>List中含函数式接口参数的方法主要为foreach(Consumer)，遍历元素时将元素作为参数传入Consumer执行，最简单的例子为<code>list.forEach(System.out::println);</code>，调用System.out对象的println方法打印遍历的当前元素。</p>
+<p><strong>Map中的函数式编程</strong><br>Map中个人常用的含函数式接口参数的方法主要为<code>foreach(BiConsumer&lt;? super K, ? super V&gt;)</code>和<code>compute(K,
+            BiFunction&lt;? super K, ? super V, ? extends V&gt;)</code>，其余的相信大家可以触类旁及。foreach为遍历当前map中的元素，前面介绍BiConsumer需要传入两个参数，而map.foreach()执行时每个key、value则作为参数传入到BiConsumer。虽然说需要传两个参数给BiConsumer，但不代表每个参数都必须用到，如下例中的BiConsumer只对每个val参数列表添加<code>“z”</code>字符串而没有用到key参数：</p>
+<pre><code>Map&lt;String, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;();
+map.put(&quot;0&quot;, Lists.newArrayList(&quot;&quot;));
+map.put(&quot;1&quot;, Lists.newArrayList(&quot;a&quot;));
+map.put(&quot;2&quot;, Lists.newArrayList(&quot;a&quot;, &quot;b&quot;));
+map.put(&quot;3&quot;, Lists.newArrayList(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;));
+map.forEach((k,v) -&gt; v.add(&quot;z&quot;)); // ① 每个val列表末尾添加z字符串</code></pre><p>如果觉得有点难理解的可看以下函数还原代码：</p>
+<pre><code>map.forEach(new BiConsumer&lt;String, List&lt;String&gt;&gt;() {
+   @Override
+    public void accept(String key, List&lt;String&gt; list) {
+        list.add(&quot;z&quot;);
+     }
+});</code></pre><p>Map的compute()方法根据名称大家也可以估到该方法是进行某些计算后再去设计key的值，可用于Map中指定key的值计算，在实际开发中个人常用于该情况：map的val为列表，map需要为指定key的val添加元素，添加前需判断val列表是否为空，为空则初始化后再添加，不为空则直接添加。</p>
+<pre><code>map.compute(&quot;4&quot;,(key, list) -&gt; list == null ? Lists.newArrayList(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;) : ListUtils.add(list,&quot;z&quot;));</code></pre><p>以上代码判断map中key为4的列表是否为空，若为空则将map中key为4的val设为元素为<code>&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;</code>的列表，不为空则在原val列表中添加字符串<code>&quot;z&quot;</code>。其中ListUtils为自定义工具类，其add方法返回参数列表，便于一行代码实现目的，实现如下：</p>
+<pre><code>public static &lt;T&gt; List&lt;T&gt; add(List&lt;T&gt; list, T t) {
+    list.add(t);
+    return list;
+}</code></pre><p>看了map.compute()的都知道该函数可以替代在操作map一些情况下的if判断，若把上面的<code>compute()</code>方法使用<code>if</code>执行，则将变成以下代码块：</p>
+<pre><code>if(map.containsKey(&quot;4&quot;)){
+    map.get(&quot;4&quot;).add(&quot;z&quot;);
+}else {
+    map.put(&quot;4&quot;,Lists.newArrayList(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;));
+}</code></pre><p>可以看出适当的使用函数式编程可以为我们减少代码行。</p>
+<p><strong>Optional简化if</strong><br>JDK1.8新增了Optional类使开发者可以减少if的语句块，类也含不少参数为函数式接口的方法，以下以一个简单的代码块进行介绍：</p>
+<pre><code>Classify classify = new Classify();
+Optional.ofNullable(classify)
+        .map(Classify::getName)
+        .orElse(&quot;null&quot;);</code></pre><p>上例中把classify对象交给Optional代理，如果classify对象为空或classify对象中的name属性为空则返回字符串“null”，其中map的参数为Function。</p>
+<p>看到这相信大家都了解到JDK中的函数式方法都是异曲同工，区别只在于在实际使用时泛型对应的实际类型。</p>
+<h1 id="个人扩展用法"><a href="#个人扩展用法" class="headerlink" title="个人扩展用法"></a>个人扩展用法</h1><p>前面基本都是谈个人对函数式的认知与JDK原生类函数式参数方法的用法，而此处开始，是时候展现真正的技术了[doge]。函数式接口运用得当可以省略不少，下文将以几个个人实际开发中思考或使用过的例子进行函数式使用的思维拓展。</p>
+<p>分类例子实体Classify：</p>
+<pre><code>@Data
+@Accessors(chain = true)
+public class Classify {
+    private Long id;
+    private String name;
+    private Integer level;
+    private Long parentId;
+    private transient List&lt;Classify&gt; sonClassifies;
+}</code></pre><ul>
+<li><h2 id="自定义ListUtils替代Stream的简单操作"><a href="#自定义ListUtils替代Stream的简单操作" class="headerlink" title="自定义ListUtils替代Stream的简单操作"></a>自定义ListUtils替代Stream的简单操作</h2></li>
 </ul>
-<h1 id="rocketmq-spring-boot-starter-用法简介"><a href="#rocketmq-spring-boot-starter-用法简介" class="headerlink" title="rocketmq-spring-boot-starter 用法简介"></a><a href="https://github.com/apache/rocketmq-spring" target="_blank" rel="noopener">rocketmq-spring-boot-starter</a> 用法简介</h1><p>当开发中需要快速集成RocketMQ时可以考虑使用 <a href="https://github.com/apache/rocketmq-spring" target="_blank" rel="noopener">rocketmq-spring-boot-starter</a> 搭建RocketMQ的集成环境，但该框架并不完全具备RocketMQ所有的配置简化，如需批量消费消息便需要自定义一个DefaultMQPushConsumer bean去消费了。<br>个人在开发中常用的<code>rocketmq-spring-boot-starter</code>相关类：</p>
-<ul>
-<li><code>RocketMQListener</code>接口：消费者都需实现该接口的消费方法<code>onMessage(msg)</code>。</li>
-<li><code>RocketMQPushConsumerLifecycleListener</code>接口：当<code>@RocketMQMessageListener</code>中的配置不足以满足我们的需求时，可以实现该接口直接更改消费者类<code>DefaultMQPushConsumer</code>配置</li>
-<li><code>@RocketMQMessageListener</code>：被该注解标注并实现了接口<code>RocketMQListener</code>的bean为一个消费者并监听指定topic队列中的消息，该注解中包含消费者的一些常用配置(大部分按默认即可)，一般只需更改consumerGroup(消费组)与topic。<code>RocketMQMessageListener</code>中的属性配置是可以使用Placeholder(占位符)从配置文件或配置中心获取的，如下图：<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmNDI3MDBkZmE?x-oss-process=image/format,png" alt="RocketMQMessageListener.png"></li>
-</ul>
-<h1 id="业务案例"><a href="#业务案例" class="headerlink" title="业务案例"></a>业务案例</h1><p>有一个点赞业务，不限制用户的点赞数只需进行记录(产品需求，开发提议无效)，当每个用户都进行x连击享受数量猛增的快感时如果数据库都需要进行x个点赞数据的插入，数据库毫无疑问会塞死导致崩溃。于是想到可以尝试下MQ削峰，比如每秒来了5000消息但数据库只能承受2000，那我消费时每次只拉取消费1600就好了，剩下的放在Broker堆积慢慢消费就好。由于之前的消息中心也在用RocketMQ，于是确认使用RocketMQ来进行削峰。</p>
-<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmNDMzN2Q1NWU?x-oss-process=image/format,png" alt="praise-clap-peak.png"></p>
-<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><blockquote>
-<p>文章例子环境：1NameServer + 2Broker + 1Consumer</p>
-</blockquote>
-<h3 id="添加maven依赖"><a href="#添加maven依赖" class="headerlink" title="添加maven依赖"></a>添加maven依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.rocketmq&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;rocketmq-spring-boot-starter&lt;&#x2F;artifactId&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
-<h3 id="application-yml配置"><a href="#application-yml配置" class="headerlink" title="application.yml配置"></a>application.yml配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">rocketmq:</span><br><span class="line">  name-server: 127.0.0.1:9876</span><br><span class="line">  producer:</span><br><span class="line">    group: praise-group</span><br><span class="line">server:</span><br><span class="line">  port: 10000</span><br><span class="line"></span><br><span class="line">spring:</span><br><span class="line">  datasource:</span><br><span class="line">    driver-class-name: com.mysql.cj.jdbc.Driver</span><br><span class="line">    username: root</span><br><span class="line">    password: tiger</span><br><span class="line">    url: jdbc:mysql:&#x2F;&#x2F;localhost:3306&#x2F;wilson</span><br><span class="line">swagger:</span><br><span class="line">  docket:</span><br><span class="line">    base-package: io.rocket.consumer.controller</span><br></pre></td></tr></table></figure>
+<p>现有一个<code>List&lt;Classify&gt;</code>的列表对象，现在需要将列表中所有分类的名字重新提取为一个列表，了解Stream会这样写：</p>
+<pre><code>List&lt;String&gt; names = list.stream()
+        .map(Classify::getName)
+        .collect(Collectors.toList());</code></pre><p>又有一个需求需要将列表元素转化成key为id，value为name的映射，这时会写成如下：</p>
+<pre><code>Map&lt;Long,String&gt; idNameMap =   list.stream()
+        .collect(Collectors.toMap(Classify::getId, Classify::getName));</code></pre><p>又又有一个需求需要将所有分类转换成key为parentId，value为子分类元素列表的映射，这时会写成如下：</p>
+<pre><code>Map&lt;Long, List&lt;Classify&gt;&gt; parentSonsMap = list.stream()
+        .collect(Collectors.groupingBy(Classify::getParentId));</code></pre><p>以上写法都是比较普通的写法，应该任何人都可以接受，但我想这么简单的操作可不可以一行解决呢？也有部分开发者认为把所有stream方法调用放到同一行就可以了，但对我而言这会影响代码的可读性(虽然影响可能不大)。在开发者以上List转换的状况虽然不多，但也不算少，为了可一行代码取代Stream的简单操作，个人撸了一个List工具类放到了自己的通用框架中，通过Function作为参数取代Stream的简单操作，完整如下：</p>
+<pre><code>public class ListUtils {
+    private ListUtils() {
+    }
 
-<h2 id="点赞接口"><a href="#点赞接口" class="headerlink" title="点赞接口"></a>点赞接口</h2><p><strong>PraiseRecord(点赞记录):</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Data</span><br><span class="line">public class PraiseRecord implements Serializable &#123;</span><br><span class="line">    private Long id;</span><br><span class="line">    private Long uid;</span><br><span class="line">    private Long liveId;</span><br><span class="line">    private LocalDateTime createTime;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>MessageController(简单的测试接口):</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">RestController</span><br><span class="line">@RequestMapping(&quot;&#x2F;message&quot;)</span><br><span class="line">public class MessageController &#123;</span><br><span class="line">    @Resource</span><br><span class="line">    private RocketMQTemplate rocketMQTemplate;</span><br><span class="line"></span><br><span class="line">    @PostMapping(&quot;&#x2F;praise&quot;)</span><br><span class="line">    public ServerResponse praise(@RequestBody PraiseRecordVO vo) &#123;</span><br><span class="line">        rocketMQTemplate.sendOneWay(RocketConstant.Topic.PRAISE_TOPIC, MessageBuilder.withPayload(vo).build());</span><br><span class="line">        return ServerResponse.success();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; ......</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>由于用户可以连续点赞，所以考虑可以在点赞消息的处理上宽松一点(容许消息丢失)以追求更高的性能，因此选择使用<code>sendOneyWay()</code>进行消息发送。</p>
-<blockquote>
-<p>RocketMQ的消息发送方式主要含syncSend()同步发送、asyncSend()异步发送、sendOneWay()三种方式，sendOneWay()也是异步发送，区别在于不需等待Broker返回确认，所以可能会存在信息丢失的状况，但吞吐量更高，具体需根据业务情况选用。性能：sendOneWay &gt; asyncSend &gt; syncSend<br>RocketMQTemplate的send()方法默认是同步(syncSend)的,更多可看源码实现。</p>
-</blockquote>
-<h2 id="PraiseListener：点赞消息消费者"><a href="#PraiseListener：点赞消息消费者" class="headerlink" title="PraiseListener：点赞消息消费者"></a>PraiseListener：点赞消息消费者</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">@RocketMQMessageListener(topic &#x3D; RocketConstant.Topic.PRAISE_TOPIC, consumerGroup &#x3D; RocketConstant.ConsumerGroup.PRAISE_CONSUMER)</span><br><span class="line">@Slf4j</span><br><span class="line">public class PraiseListener implements RocketMQListener&lt;PraiseRecordVO&gt;, RocketMQPushConsumerLifecycleListener &#123;</span><br><span class="line">    @Resource</span><br><span class="line">    private PraiseRecordService praiseRecordService;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onMessage(PraiseRecordVO vo) &#123;</span><br><span class="line">        praiseRecordService.insert(vo.copyProperties(PraiseRecord::new));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void prepareStart(DefaultMQPushConsumer consumer) &#123;</span><br><span class="line">        &#x2F;&#x2F; 每次拉取的间隔，单位为毫秒</span><br><span class="line">        consumer.setPullInterval(2000);</span><br><span class="line">        &#x2F;&#x2F; 设置每次从队列中拉取的消息数为16</span><br><span class="line">        consumer.setPullBatchSize(16);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>单次pull消息的最大数目受broker存储的<code>MessageStoreConfig.maxTransferCountOnMessageInMemory</code>(默认为32)值限制，即若想要消费者从队列拉取的消息数大于32有效(pullBatchSize&gt;32)则需更改Broker的启动参数<code>maxTransferCountOnMessageInMemory</code>值。在MQ削峰的配置参数里，以下几个<code>DefaultMQPushConsumer</code>的参数是需要注意一下的：</p>
+    public static &lt;T&gt; List&lt;T&gt; add(List&lt;T&gt; list, T t) {
+        list.add(t);
+        return list;
+    }
+
+    public static boolean isEmpty(Collection collection) {
+        return collection == null || collection.isEmpty();
+    }
+
+    public static boolean isNotEmpty(Collection collection) {
+        return !isEmpty(collection);
+    }
+
+    public static &lt;T&gt; ArrayList&lt;T&gt; newArrayList(T... elements) {
+        ArrayList&lt;T&gt; list = new ArrayList&lt;&gt;(elements.length + elements.length &gt;&gt; 1 + 5);
+        Collections.addAll(list, elements);
+        return list;
+    }
+
+    /**
+     * 条件为true时才添加元素
+     *
+     * @param condition  条件
+     * @param collection 集合
+     * @param val
+     * @return 添加结果
+     */
+    public static &lt;T&gt; boolean addIf(boolean condition, Collection&lt;T&gt; collection, T val) {
+        return condition &amp;&amp; collection.add(val);
+    }
+
+    /**
+     * 从对象列表中提取对象属性
+     *
+     * @param list      对象列表
+     * @param valGetter 对象属性get方法
+     * @param &lt;T&gt;       对象
+     * @param &lt;V&gt;       对象属性
+     * @return 对象属性列表
+     */
+    public static &lt;T, V&gt; List&lt;V&gt; collectToList(Collection&lt;T&gt; list, Function&lt;T, V&gt; valGetter) {
+        List&lt;V&gt; properties = new ArrayList&lt;&gt;(list.size());
+        list.forEach(e -&gt; properties.add(valGetter.apply(e)));
+        return properties;
+    }
+
+    /**
+     * 从对象列表中提取指定属性为key,当前对象为value转为map
+     *
+     * @param list
+     * @param keyGetter
+     * @param &lt;T&gt;
+     * @param &lt;K&gt;
+     * @return
+     */
+    public static &lt;T, K&gt; Map&lt;K, T&gt; collectToMap(Collection&lt;T&gt; list, Function&lt;T, K&gt; keyGetter) {
+        Map&lt;K, T&gt; propertiesMap = new HashMap&lt;&gt;(list.size());
+        list.forEach(e -&gt; propertiesMap.put(keyGetter.apply(e), e));
+        return propertiesMap;
+    }
+
+    /**
+     * 从对象列表中提取指定属性T为key,属性V为value转为map
+     *
+     * @param list      对象列表
+     * @param keyGetter
+     * @param valGetter
+     * @param &lt;T&gt;
+     * @param &lt;K&gt;
+     * @param &lt;V&gt;
+     * @return
+     */
+    public static &lt;T, K, V&gt; Map&lt;K, V&gt; collectToMap(Collection&lt;T&gt; list, Function&lt;T, K&gt; keyGetter, Function&lt;T, V&gt; valGetter) {
+        Map&lt;K, V&gt; propertiesMap = new HashMap&lt;&gt;(list.size());
+        list.forEach(e -&gt; propertiesMap.put(keyGetter.apply(e), valGetter.apply(e)));
+        return propertiesMap;
+    }
+
+    /**
+     * 根据列表对象中的某属性值为key划分列表,value为key的属性值相同的对象列表,
+     * 功能同stream().collect(Collectors.groupingBy())
+     *
+     * @param list
+     * @param keyGetter
+     * @param &lt;T&gt;
+     * @param &lt;K&gt;
+     * @return
+     */
+    public static &lt;T, K&gt; Map&lt;K, List&lt;T&gt;&gt; groupToMap(Collection&lt;T&gt; list, Function&lt;T, K&gt; keyGetter) {
+        Map&lt;K, List&lt;T&gt;&gt; propertiesMap = new HashMap&lt;&gt;(list.size());
+        for (T each : list) {
+            propertiesMap.compute(keyGetter.apply(each),
+                    (key, valueList) -&gt; isEmpty(valueList) ? add(new ArrayList&lt;&gt;(list.size()), each) : add(valueList, each));
+        }
+        return propertiesMap;
+    }
+
+    /**
+     * 根据列表对象中的某属性值为key划分列表,value为key的属性值相同的对象列表,value为key的属性值相同的对象中指定属性的值列表,
+     * 功能同stream().collect(Collectors.groupingBy())
+     *
+     * @param list
+     * @param keyGetter
+     * @param valGetter
+     * @param &lt;T&gt;
+     * @param &lt;K&gt;
+     * @param &lt;V&gt;
+     * @return
+     */
+    public static &lt;T, K, V&gt; Map&lt;K, List&lt;V&gt;&gt; groupToMap(Collection&lt;T&gt; list, Function&lt;T, K&gt; keyGetter, Function&lt;T, V&gt; valGetter) {
+        Map&lt;K, List&lt;V&gt;&gt; propertiesMap = new HashMap&lt;&gt;(list.size());
+        for (T each : list) {
+            K key = keyGetter.apply(each);
+            List&lt;V&gt; values = Optional.ofNullable(propertiesMap.get(key)).orElse(new ArrayList&lt;&gt;());
+            values.add(valGetter.apply(each));
+            propertiesMap.put(key, values);
+        }
+        return propertiesMap;
+    }
+
+    /**
+     * 获取列表中重复的值
+     *
+     * @param list
+     * @param &lt;T&gt;
+     * @return
+     */
+    public static &lt;T&gt; Set&lt;T&gt; collectRepeats(Collection&lt;T&gt; list) {
+        Set&lt;T&gt; set = new HashSet&lt;&gt;(list.size());
+        return list.stream()
+                .filter(e -&gt; !set.add(e))
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * 按指定大小，分隔集合，将集合按规定个数分为n个部分
+     *
+     * @param &lt;T&gt;
+     * @param list
+     * @param len
+     * @return
+     */
+    public static &lt;T&gt; List&lt;List&lt;T&gt;&gt; splitList(List&lt;T&gt; list, int len) {
+        if (list == null || list.isEmpty() || len &lt; 1) {
+            return Collections.emptyList();
+        }
+        List&lt;List&lt;T&gt;&gt; result = new ArrayList&lt;&gt;();
+
+        int size = list.size();
+        int count = (size + len - 1) / len;
+        for (int i = 0; i &lt; count; i++) {
+            List&lt;T&gt; subList = list.subList(i * len, ((i + 1) * len &gt; size ? size : len * (i + 1)));
+            result.add(subList);
+        }
+        return result;
+    }
+
+}</code></pre><p>看看使用该工具类替代Stream简单操作后的效果吧：</p>
+<pre><code>List&lt;String&gt; namess = ListUtils.collectToList(list,Classify::getName);
+Map&lt;Long, String&gt; idMap = ListUtils.collectToMap(list,Classify::getId,Classify::getName);
+Map&lt;Long, List&lt;Classify&gt;&gt; parentSonsMap = ListUtils.groupToMap(list,Classify::getParentId);
+// 将List转化成key为parentId,value为子分类name列表的映射
+Map&lt;Long, List&lt;String&gt;&gt; parentSonNamesMap = ListUtils.groupToMap(list,Classify::getId,Classify::getName);</code></pre><p>可以看出通过函数式接口作为参数传递，不仅可以增加程序的可读性，还可以为我们的编码开发添加不少扩展性。</p>
 <ul>
-<li>pullInterval：每次从Broker拉取消息的间隔，单位为毫秒</li>
-<li>pullBatchSize：每次从Broker队列拉取到的消息数，该参数很容易让人误解，一开始我以为是每次拉取的消息总数，但测试过几次后确认了实质上是从每个队列的拉取数(源码上的注释文档真的很差，跟没有一样)，即Consume每次拉取的消息总数如下：<br><code>EachPullTotal=所有Broker上的写队列数和(writeQueueNums=readQueueNums) * pullBatchSize</code></li>
-<li>consumeMessageBatchMaxSize：每次消费(即将多条消息合并为List消费)的最大消息数目，默认值为1，<a href="https://github.com/apache/rocketmq-spring" target="_blank" rel="noopener">rocketmq-spring-boot-starter</a> 目前不支持批量消费(2.1.0版本)</li>
+<li><h2 id="简化局部不同多处相同的代码块"><a href="#简化局部不同多处相同的代码块" class="headerlink" title="简化局部不同多处相同的代码块"></a>简化局部不同多处相同的代码块</h2></li>
 </ul>
-<p>在消费者开始消息消费时会先从各队列中拉取一条消息进行消费，消费成功后再以每次pullBatchSize的数目进行拉取。</p>
-<p>PraiseListener中设置了每次拉取的间隔为2s，每次从队列拉取的消息数为16，在搭建了2master broker且broker上writeQueueNums=readQueueNums=4的环境下每次拉取的消息理论数值为16 * 2 * 4 = 128，在第一次从各队列拉取1条消息(即共8条)后消费成功后会每次就会拉取最多128条消息进行消费，想验证下的可以把onMessage()的insert()改为log.info(“1”)然后统计单位秒内打印的日志数是否为128。<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmNDM4ZTc4MzE?x-oss-process=image/format,png" alt="praise-topic.png"></p>
-<p>根据以上配置单Conumer情况下每2s理论消费为128，即每2秒数据库新增的点赞数据大概为128条左右，有20%偏差都在个人可接受范围内，然后对点赞接口进行简单压测1s 2000请求校验MQ效果，根据消费配置理论上需要16次拉取即需32s才能消费完，压测后查看数据库校验效果：<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmNDQxYzBhY2Y?x-oss-process=image/format,png" alt="praise-jmeter.png"><br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmNDQzYWY5YmQ?x-oss-process=image/format,png" alt="praise-jmeter-db.png"><br>由上图可以看出除第一次2s和最后一次2s外数据库每2s的插入数据数和一般都在128附近波动，也用了34s(因第一次拉取数较少所以比理论多花费一次拉取)消费的偏差大小可能会受每次拉取数pullBatchSize、Broker上的消息队列数、网络波动等情况影响，但需要的目的已经达到了，我只想把单位时间内过多的数据库操作交给MQ做分隔成多个单位时间内的小批量操作，消息过多就堆积，当请求峰值过了后直到MQ堆积的消息消费完前数据库的插入数依旧会与峰值期的插入数相差不大，达到了MQ削峰填谷的效果。</p>
-<h3 id="上线了但消费效率预估失误如何动态更改消费效率-？"><a href="#上线了但消费效率预估失误如何动态更改消费效率-？" class="headerlink" title="上线了但消费效率预估失误如何动态更改消费效率 ？"></a>上线了但消费效率预估失误如何动态更改消费效率 ？</h3><p>当把拉取数pullBatchSize设置Broker的默认最大传输值32了，线上又不想重启Broker更改maxTransferCountOnMessageInMemory参数，如有2个Broker且queue都为4，那么拉取消费效率才为32 * 2 * 4 = 256，如果想要动态调整，可以从Broker数或Broker队列数下手，可以将Broker的writeQueueNums、readQueueNums增大，如都改为8，那么效率就成了32 * 2 * 8 = 512。需要注意的是更改完queues后必须去Dashboard的Topic下的CONSUMER MANAGER查看新增的队列上是否都有Consumer成功注册上去了，因为遇到了在测试与生产上使用rocketmq-spring-boot-starter @RocketMQListener标注消费者不会自动注册到新队列上的情况，但没排除是不是RocketMQ版本的原因(个人本地的版本比环境上的高了一个小版本0.0.1，本地没出现没消费者注册到新队列上的问题)，而是使用了自定义DefaultMQPushConsumer bean(原生的方式都是没有问题的)的备用方案。当再启动新的消费者应用时CONSUMER MANAGER(下图)中就会出现 新Consumer数 * 各Broker队列数和的队列行。<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmYjFhOTk1OTY?x-oss-process=image/format,png" alt="praise-topic-consumer.png"></p>
-<h3 id="如何使用RocketMQ批量消费-？"><a href="#如何使用RocketMQ批量消费-？" class="headerlink" title="如何使用RocketMQ批量消费 ？"></a>如何使用RocketMQ批量消费 ？</h3><p>虽然点赞业务使用MQ单条插入后TPS已经达到当前业务指标要求了，但考虑到如果后续要求在不添加机器数的情况下增加TPS，且数据量还没到分库分表的程度，个人就打算从批量消费下手，由一次插入一条点赞记录改为一次性插入多条(insertBatch)。当然能满足现有需求能不做肯定不做的，过度优化过分碍事，但想多点方案不会坏事。rocketmq-spring-boot-starter并没有提供批量消费的功能，所以要批量消费消息需要自定义<code>DefaultMQPushConsumer</code>并配置其<code>consumeMessageBatchMaxSize</code>属性。<code>consumeMessageBatchMaxSize</code>属性默认值为1，即每次只消费一条消息，需要注意的是该属性也会受<code>pullBatchSize</code>影响，如果<code>consumeMessageBatchMaxSize</code>为32但<code>pullBatchSize</code>只为12，那么每次批量消费的最大消息数也就只有12。<br>如下为个人测试批量消费Consumer的测试bean：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">@Bean</span><br><span class="line">public DefaultMQPushConsumer userMQPushConsumer() throws MQClientException &#123;</span><br><span class="line">    DefaultMQPushConsumer consumer &#x3D; new DefaultMQPushConsumer(RocketConstant.ConsumerGroup.SPRING_BOOT_USER_CONSUMER);</span><br><span class="line">    consumer.setNamesrvAddr(nameServer);</span><br><span class="line">    consumer.subscribe(RocketConstant.Topic.SPRING_BOOT_USER_TOPIC, &quot;*&quot;);</span><br><span class="line">    &#x2F;&#x2F; 设置每次消息拉取的时间间隔，单位毫秒</span><br><span class="line">    consumer.setPullInterval(1000);</span><br><span class="line">    &#x2F;&#x2F; 设置每个队列每次拉取的最大消息数</span><br><span class="line">    consumer.setPullBatchSize(24);</span><br><span class="line">    &#x2F;&#x2F; 设置消费者单次批量消费的消息数目上限</span><br><span class="line">    consumer.setConsumeMessageBatchMaxSize(12);</span><br><span class="line">    consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context)</span><br><span class="line">            -&gt; &#123;</span><br><span class="line">        List&lt;UserInfo&gt; userInfos &#x3D; new ArrayList&lt;&gt;(msgs.size());</span><br><span class="line">        Map&lt;Integer, Integer&gt; queueMsgMap &#x3D; new HashMap&lt;&gt;(8);</span><br><span class="line">        msgs.forEach(msg -&gt; &#123;</span><br><span class="line">            userInfos.add(JSONObject.parseObject(msg.getBody(), UserInfo.class));</span><br><span class="line">            queueMsgMap.compute(msg.getQueueId(), (key, val) -&gt; val &#x3D;&#x3D; null ? 1 : ++val);</span><br><span class="line">        &#125;);</span><br><span class="line">        log.info(&quot;userInfo size: &#123;&#125;, content: &#123;&#125;&quot;, userInfos.size(), userInfos);</span><br><span class="line">        &#x2F;*</span><br><span class="line">          处理批量消息，如批量插入：userInfoMapper.insertBatch(userInfos);</span><br><span class="line">         *&#x2F;</span><br><span class="line">        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;</span><br><span class="line">    &#125;);</span><br><span class="line">    consumer.start();</span><br><span class="line">    return consumer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果默认配置情况下log打印出的userInfo size恒为1，但由于设置了<code>consumeMessageBatchMaxSize</code>与<code>pullBatchSize</code>，且<code>pullBatchSize</code>较小，所以每次消费的消息数最大值为12，如下图：<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzIzLzE3MWE2NGJmYjI4MTdhMGY?x-oss-process=image/format,png" alt="consume-batch.png"></p>
-<h1 id="附本文相关信息"><a href="#附本文相关信息" class="headerlink" title="附本文相关信息"></a>附本文相关信息</h1><ul>
-<li>确保mqnamesrv与mqbroker已启动成功，如该文章环境的启动：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mqnamesrv -n 127.0.0.1:9876</span><br><span class="line">mqbroker -c E:\RocketMQ\rocketmq-all-4.5.2-bin-release\bin\2m-noslave\broker-a.properties</span><br><span class="line">mqbroker -c E:\RocketMQ\rocketmq-all-4.5.2-bin-release\bin\2m-noslave\broker-b.properties</span><br></pre></td></tr></table></figure></li>
-<li>RocketMQ DashBoard启动流程可参考<a href="https://github.com/apache/rocketmq-externals/tree/master/rocketmq-console" target="_blank" rel="noopener">官方github文档</a>或到<a href="https://download.csdn.net/download/z28126308/12355342" target="_blank" rel="noopener">我的资源</a>里下载jar包运行</li>
-<li><a href="https://github.com/Wilson-He/spring-boot-series/tree/master/spring-rocketmq" target="_blank" rel="noopener">源码地址</a>，2m-noslave目录是该文章中例子中的2master broker配置与启动脚本，spring-boot-consumer-peak目录为包含该文章相关代码的实际例子</li>
+<p>局部不同多出相同的代码块重复出现的状况总会遇到，如一些业务代码前后都相同唯独中间不同，如DB连接-操作-释放、Ssh连接-操作-释放，以下将以一个ssh连接-操作-释放的代码来扩展函数式编程简化代码的用法。<br>可能会有人疑问ssh连接-操作-释放这样的实际操作业务不多吧？就在一段时间之前，上级让我去Zabbix查看各服务器的CPU、内存、磁盘使用率然后写入文档。看到机器数的我内心是拒接的，于是想出了使用java ssh连接到服务器执行相应的查看指令然后提取占用率打印到控制台上，再copy到文档中（反正得到了默许了）。以下是未优化前的两个查询方法：</p>
+<pre><code>/**
+ * 查询cpu占用率
+ */
+public static String cpuPercent(String ip, String username, String passw
+    JSch jsch = new JSch();
+    Session session = null;
+    Channel channel = null;
+    String cpuPercent = null;
+    try {
+        session = jsch.getSession(username, ip, 22);
+        Properties config = new Properties();
+        config.put(&quot;StrictHostKeyChecking&quot;, &quot;no&quot;);
+        session.setConfig(config);
+        session.setPassword(password);
+        session.connect();
+        String cmd = &quot;sar -u 3 1|awk &apos;{print $8}&apos;|tail -1&quot;;
+        channel = session.openChannel(&quot;exec&quot;);
+        ((ChannelExec) channel).setCommand(cmd);
+        ((ChannelExec) channel).setErrStream(System.err);
+        ((ChannelExec) channel).setPty(true);
+        channel.connect();
+        InputStream in = channel.getInputStream();
+        String output = IOUtils.toString(in, StandardCharsets.UTF_8);
+        cpuPercent = HUNDRED.subtract(BigDecimal.valueOf(Double.valueOf(
+                .setScale(2, RoundingMode.HALF_UP)
+                .toString() + &quot;%&quot;;
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        if (channel != null) {
+            channel.disconnect();
+        }
+        if (session != null) {
+            session.disconnect();
+        }
+    }
+    return cpuPercent;
+}
+
+/**
+ * 磁盘占用率查询
+ */
+public static String diskPercent(String ip, String username, String pass
+    JSch jsch = new JSch();
+    Session session = null;
+    Channel channel = null;
+    String diskPercent = null;
+    try {
+        session = jsch.getSession(username, ip, 22);
+        Properties config = new Properties();
+        config.put(&quot;StrictHostKeyChecking&quot;, &quot;no&quot;);
+        session.setConfig(config);
+        session.setPassword(password);
+        session.connect();
+          String cmd = &quot;df -hl | grep apps|tail -1|awk &apos;{print $4}&apos;&quot;;
+        String cmd = &quot;df -hl | grep apps|tail -1|awk &apos;{print $5}&apos;&quot;;
+        channel = session.openChannel(&quot;exec&quot;);
+        ((ChannelExec) channel).setCommand(cmd);
+        ((ChannelExec) channel).setErrStream(System.err);
+        ((ChannelExec) channel).setPty(true);
+        channel.connect();
+        InputStream in = channel.getInputStream();
+        diskPercent = IOUtils.toString(in, StandardCharsets.UTF_8);
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        if (channel != null) {
+            channel.disconnect();
+        }
+        if (session != null) {
+            session.disconnect();
+        }
+    }
+    return diskPercent;
+}</code></pre><p>相信大家可以看出Ssh连接与释放的代码块是相同的，唯独操作是不同的，于是我把相同的代码块写入了一个方法中，操作的代码块作为参数，优化后的完整代码如下：</p>
+<pre><code>public class SshClientUtils {
+    private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
+    private static final String RESULT_FORMAT = &quot;%s\t\t%s\t\t%s\t%s&quot;;
+
+    /**
+     * 执行查询cpu、mem、disk命令并打印各占用率
+     */
+    public static void exec(SshConfig sshConfig) {
+        System.err.println(&quot;cpu%\t\tmem%\t\tdisk\tip&quot;);
+        String username = sshConfig.getUsername();
+        String password = sshConfig.getPassword();
+        List&lt;String&gt; ipList = sshConfig.getIpList();
+        ipList.forEach(ip -&gt; {
+            String cpuPercent = cpuPercent(ip, username, password);
+            String memoryPercent = memoryPercent(ip, username, password);
+            String diskPercent = diskPercent(ip, username, password);
+            System.out.println(String.format(RESULT_FORMAT, cpuPercent, memoryPercent, diskPercent, ip)
+                    .replaceAll(&quot;\n|\r\n&quot;, &quot;&quot;));
+        });
+    }
+
+    /**
+     * 查询cpu占用率
+     */
+    public static String cpuPercent(String ip, String username, String password) {
+        String cmd = &quot;sar -u 3 1|awk &apos;{print $8}&apos;|tail -1&quot;;
+        return exec(ip, username, password, cmd, output -&gt; HUNDRED.subtract(BigDecimal.valueOf(Double.valueOf(output)))
+                .setScale(2, RoundingMode.HALF_UP)
+                .toString() + &quot;%&quot;);
+    }
+
+    /**
+     * 内存占用率查询
+     */
+    public static String memoryPercent(String ip, String username, String password) {
+        String cmd = &quot;free|grep Mem&quot;;
+        return exec(ip, username, password, cmd, output -&gt; {
+            String[] memories = output.replaceAll(&quot;\\s+&quot;, &quot;,&quot;)
+                    .substring(5)
+                    .split(&quot;,&quot;);
+            double total = Integer.parseInt(memories[0]);
+            double free = Integer.parseInt(memories[2]);
+            double buffers = Integer.parseInt(memories[4]);
+            double cache = Integer.parseInt(memories[5]);
+            BigDecimal freePercent = BigDecimal.valueOf((free + buffers + cache) / total)
+                    .setScale(6, RoundingMode.HALF_UP);
+            return BigDecimal.ONE.subtract(freePercent)
+                    .multiply(HUNDRED)
+                    .setScale(2, RoundingMode.HALF_UP)
+                    .toString() + &quot;%&quot;;
+        });
+    }
+
+
+    /**
+     * 磁盘占用率查询
+     */
+    public static String diskPercent(String ip, String username, String password) {
+        String cmd = &quot;df -hl | grep apps|tail -1|awk &apos;{print $5}&apos;&quot;;
+        return exec(ip, username, password, cmd, output -&gt; output);
+    }
+
+    /**
+     * 直接执行命令
+     */
+    public static String exec(String ip, String username, String password, String command, Function&lt;String, String&gt; execFunc) {
+        JSch jsch = new JSch();
+        Session session = null;
+        Channel channel = null;
+        try {
+            session = jsch.getSession(username, ip, 22);
+            Properties config = new Properties();
+            config.put(&quot;StrictHostKeyChecking&quot;, &quot;no&quot;);
+            session.setConfig(config);
+            session.setPassword(password);
+            session.connect();
+            channel = session.openChannel(&quot;exec&quot;);
+            ((ChannelExec) channel).setCommand(command);
+            ((ChannelExec) channel).setErrStream(System.err);
+            ((ChannelExec) channel).setPty(true);
+            channel.connect();
+            InputStream in = channel.getInputStream();
+            String output = IOUtils.toString(in, StandardCharsets.UTF_8);
+            return func.apply(execFunc);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (channel != null) {
+                channel.disconnect();
+            }
+            if (session != null) {
+                session.disconnect();
+            }
+        }
+        return null;
+    }
+}</code></pre><p>可以看出优化的代码将Ssh的连接与操作都抽象到exec()方法中了，而实际操作则是由入参的Function实现决定，以上便是一个通过Function优化代码部分不同的例子。</p>
+<p><strong>将if-set对象属性通过函数式接口放到对象内部执行</strong><br>话多不如实例，相信大家都遇到过类似以下这样的情况：</p>
+<pre>
+if(condition1){
+    classify.setName("Wilson");
+}
+if(condition2){
+    classify.setLevel(5);
+}
+</pre>
+<p>好麻烦，能不能再简单一点(我的简单永远没有上限)，现在先对以上代码块分析一下(简化的核心在于抽离)，相同的部分主要有if、classify，不同的部分为condition的值、set方法、set的值，既然有相同的就作为方法，不同的就作为参数吧(是不是跟ssh的例子想法差别不大吧)，于是我在Classify类中添加了以下方法：</p>
+<pre><code>public &lt;V&gt; Classify set(boolean isSet, V value, BiFunction&lt;Classify, V, Classify&gt; setFunction) {
+    return isSet ? setFunction.apply(this, value) : this;
+}</code></pre><p>???<br>唔，这里可能有一些门槛，如果暂时不理解或觉得无法灵活运动的也不用着急，代码都是慢慢磨出来的，调用一下吧：</p>
+<pre><code>Classify classify = new Classify();
+classify.set(true, &quot;Wilson&quot;, Classify::setName)
+        .set(false, 5, Classify::setLevel);
+System.out.println(classify);
+// 打印出Classify(id=null, name=Wilson, level=null, parentId=null, sonClassifies=null)</code></pre><p>由于Classify在类上添加了Lombok的注解<code>@Accessors(chain = true)</code>，所以每个set方法结果都会返回当前对象方便链式调用(我很喜欢链式)，所以上面的set方法可以直接返回apply(this,setFunction)的结果。BiFunction前面有提过是需要两个参数并返回一个结果的，在该例子中，由于Classify的setProperty()是返回当前对象的，所以不能用Function&lt;T,R&gt;作为set()的函数式参数(否则T与R都是Classify，无法设置属性)，Classify对象作为BiFunction的第一个参数，set()方法的value作为第二个参数，当前classify对象作为返回值，这样就可以保持我的对象可以继续链式调用各set方法。<br>也有会有人疑问set方法设置返回值不会影响程序的正常运行(如框架的调用)吗？这里个人是从反射与Java关键字void的角度思考过后就一直习惯使对象set方法返回当前对象了，这里希望大家也思考一下便不多作讲解了。</p>
+<ul>
+<li><h2 id="使用Supplier再提高一下copyProperties的逼格"><a href="#使用Supplier再提高一下copyProperties的逼格" class="headerlink" title="使用Supplier再提高一下copyProperties的逼格"></a>使用Supplier再提高一下copyProperties的逼格</h2><p>相信接触过Spring的都会使用过其中BeanUtils的<code>copyProperties()</code>方法，个人经常使用该方法进行VO属性到Model属性的设置，Model一般都是现场new所以内部属性都是的，反正都是空的何不再通过Supplier函数式接口扩展一下工具类提高一下逼格呢？于是便有了以下代码：</p>
+<p>  @NoArgsConstructor<br>  public class ObjectUtils {</p>
+<pre><code>public static &lt;S, T&gt; T copyProperties(S source, T target) {
+    BeanUtils.copyProperties(source, target);
+    return target;
+}
+
+public static &lt;S, T&gt; T copyProperties(S source, Supplier&lt;T&gt; targetSupplier) {
+    T target = targetSupplier.get();
+    BeanUtils.copyProperties(source, target);
+    return target;
+}</code></pre><p>  }</p>
+</li>
 </ul>
+<p>再以一段Controller的伪代码演示一下:<br><code>Long id = classifyService.insert(ObjectUtils.copyProperties(classifyVO,Classify::new));</code></p>
 
       
     </div>
@@ -306,7 +732,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -374,7 +800,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
