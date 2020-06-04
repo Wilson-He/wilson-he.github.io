@@ -195,7 +195,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/Markdown/">
+    <link itemprop="mainEntityOfPage" href="https://wilson-he.gitee.io/rocketmq/message-center/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://knowledge-pictures.oss-cn-beijing.aliyuncs.com/atavar/wingsOfPiano.jpg">
@@ -209,10 +209,23 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/Markdown/" class="post-title-link" itemprop="url">Markdown语法大全</a>
+            <a href="/rocketmq/message-center/" class="post-title-link" itemprop="url">聊聊MQ与如何基于Spring Boot RocketMQ搭建一个消息中心</a>
         </h1>
 
         <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/RocketMQ/" itemprop="url" rel="index"><span itemprop="name">RocketMQ</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/RocketMQ/Spring-Boot/" itemprop="url" rel="index"><span itemprop="name">Spring Boot</span></a>
+                </span>
+            </span>
 
           
 
@@ -225,89 +238,162 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Markdown基础语法"><a href="#Markdown基础语法" class="headerlink" title="Markdown基础语法"></a>Markdown基础语法</h1><p>#标识1-6级标题  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 一级标题</span><br><span class="line">## 二级标题</span><br><span class="line">### 三级标题</span><br><span class="line">#### 四级标题</span><br><span class="line">##### 五级标题</span><br><span class="line">###### 六级标题</span><br></pre></td></tr></table></figure>
-<p>换行：段落末尾添加两个或以上空格<br><em>字体样式</em>：</p>
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><hr>
+<p>在引入一项技术之前，首先必须清楚的是该技术可以为项目解决什么问题。个人在了解消息队列(Message Queue)之前，以为消息队列主是用于发送短信、邮件等消息发送(异步解耦)，但深入理解才发现自己的理解错了，MQ的作用不止体现在一些用户接收到的具体消息里，还可用于其它应用的数据发送、通用的业务处理等。<br>消息队列从字面上意思解读就是将消息存放到队列里，根据队列FIFO(先入先出)的特性进行消息消费。在实际开发中，是一种跨进程的通信机制，用于应用间的消息传递。 </p>
+<h2 id="在引入MQ之前，需要了解的优缺点与应用场景"><a href="#在引入MQ之前，需要了解的优缺点与应用场景" class="headerlink" title="在引入MQ之前，需要了解的优缺点与应用场景"></a>在引入MQ之前，需要了解的优缺点与应用场景</h2><hr>
+<p>MQ的主要优点为<strong>解耦</strong>、<strong>异步</strong>、<strong>削峰</strong>，以下举一个简单的场景来反应这几个特性。<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9rbm93bGVkZ2UtcGljdHVyZXMub3NzLWNuLWJlaWppbmcuYWxpeXVuY3MuY29tL1JvY2tldE1RL01RJUU4JUFFJUEyJUU1JThEJTk1JUU0JUI4JTlBJUU1JThBJUExJUU2JUExJTg4JUU0JUJFJThCLnBuZw?x-oss-process=image/format,png" alt="MQ%E8%AE%A2%E5%8D%95%E4%B8%9A%E5%8A%A1%E6%A1%88%E4%BE%8B.png"></p>
+<p>在微服务项目中，一般会根据核心业务进行系统的垂直拆分再进行单独部署。在上图中，各系统在下单业务里主要负责的内容如下：</p>
 <ul>
-<li>斜体：<code>_斜体_</code>或<code>*斜体*</code></li>
-<li>粗体：<code>__加粗__</code>或<code>**加粗**</code></li>
-<li>斜体加粗：<code>***斜体加粗***</code>或<code>___斜体加粗___</code>  </li>
-<li>删除线： <code>~~删除线~~</code></li>
-<li>下划线： <code>&lt;u&gt;下划线&lt;/u&gt;</code></li>
-<li>脚注：  <code>文本[^脚注名]</code><br>列表(3种语法)：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">* 元素1</span><br><span class="line">* 元素2</span><br><span class="line"> </span><br><span class="line">- 元素1</span><br><span class="line">- 元素2</span><br><span class="line"> </span><br><span class="line">+ 元素1</span><br><span class="line">+ 元素2</span><br><span class="line"></span><br><span class="line">多级列表：</span><br><span class="line">- 一级列表1</span><br><span class="line">  - 二级列表1.1  </span><br><span class="line">    这里是二级列表  </span><br><span class="line">    - 三级列表1.1.1  </span><br><span class="line">    这里是三级列表</span><br><span class="line">  - 二级列表1.2</span><br></pre></td></tr></table></figure>
+<li>订单系统：创建订单，将下单消息(如订单id、用户数据)发送到MQ</li>
+<li>MQ：限制每秒的订单请求处理数(如每秒接收2000个请求但数据库只能处理1000个则只处理1000个，处理不过来的先在消息队列里堆积)</li>
+<li>物流系统：创建订单物流信息</li>
+<li>积分系统：用户购物积分信息更新</li>
+</ul>
+<p>想象下以上场景没有MQ的的存在时创建订单流程中存在的问题：</p>
+<ul>
+<li>订单系统创建完订单信息后要去调用物流系统、积分系统上的业务接口，系统严重的<strong>耦合</strong>在一起(解耦)</li>
+<li>订单系统若非通过线程去调用其它系统的接口，还需同步等待返回浪费不少时间(异步，避免创建线程调用的麻烦)</li>
+<li>用户高峰期请求过多数据库处理不过来进而导致应用崩溃(削峰)</li>
+</ul>
+<p>任何事物都有两面性，虽然MQ可以给系统解决不少问题，但也会引入一些问题，如：</p>
+<ul>
+<li>系统复杂度提高，需要考虑消息重复消费、消息丢失等问题</li>
+<li>数据一致性问题，如上例中的物流或库存系统写库出现异常如何回滚补偿</li>
+</ul>
+<p>了解了MQ的一些特性后，再讨论下几个适合使用MQ的场景：</p>
+<ul>
+<li>上游系统不关心下游的执行结果(如用户注册成功后用户系统通过MQ向用户发送邮件，但发送成不成功用户系统根本不在意)</li>
+<li>依赖于数据的定时任务(如下单后24小时内不支付则取消订单，申请退款72小时内商家不处理则自动退款)</li>
+</ul>
+<h2 id="引入MQ后的一些问题解决思路"><a href="#引入MQ后的一些问题解决思路" class="headerlink" title="引入MQ后的一些问题解决思路"></a>引入MQ后的一些问题解决思路</h2><hr>
+<ul>
+<li><h3 id="消息重复消费-保证消息的幂等性"><a href="#消息重复消费-保证消息的幂等性" class="headerlink" title="消息重复消费(保证消息的幂等性)"></a>消息重复消费(保证消息的幂等性)</h3><blockquote>
+<p>幂等性：对于同一操作的请求无论请求多少次结果都是一致的，在MQ中的具体体现为同一条消息无论发送都少次都会被消费一次。</p>
+</blockquote>
+<p>  由于网络抖动(延迟)的原因消息重复发送的问题是不可避免的，如果在消费端消费时没有做好消息的幂等性保证就有可能出现重复消费，导致同一条消息被多次消费、写库多次的情况。比较常见的做法是为消息添加一个唯一标识(ID)，在消费时根据ID查询数据库是否存在该消息记录，如果不存在再插入消息，存在则不进行插入消费。当生成与消费时间间隔不长时，可使用Redis提高消息幂等性的效率，如：</p>
+<ol>
+<li><p>消费者消费前根据ID去查询redis是否存在该消息</p>
+</li>
+<li><p>不存在该消息则消费并写入redis，存在该消息则不消费返回</p>
+<p>关于消息ID：</p>
+</li>
+<li><p>RocketMQ的每条消息都会配有全局唯一的ID</p>
+</li>
+<li><p>如果消息中间件不会生成ID，可考虑一些ID服务(如雪花算法)生成全局唯一ID</p>
+</li>
+<li><p>建议ID不与实际业务关联</p>
+</li>
+</ol>
+</li>
+</ul>
+<p>如目前个人工作中负责的消息中心应用是基于MongoDB+RocketMQ的技术架构，MongoDB负责存储各个应用发送过来的消息(主要为Sms、Email等)，每次消费前通过RocketMQ的Message ID查询Mongo保证消息幂等性避免重复消费，消费成功后更新DB中的消息状态。</p>
+<ul>
+<li><h3 id="消息丢失-消息的可靠性"><a href="#消息丢失-消息的可靠性" class="headerlink" title="消息丢失(消息的可靠性)"></a>消息丢失(消息的可靠性)</h3>  MQ各组件的消息丢失含义都有所不同，导致与解决方案也不一定相同，以kafka、rocket的消息传递模型(Producer-&gt;Broker-&gt;Consumer)为例：<ul>
+<li>Producer：消息未持久化到Broker中，或消费者未能成功消费到消息。Kafka可通过更改ack配置解决，rocketMQ中会返回消息发送状态码。</li>
+<li>Broker：消息成功传到到我这里了，可我因为某些原因(不同的MQ可能因机制问题有不同原因)弄丢了，如果是硬件原因(如宕机、磁盘损坏)建议你copy(集群部署)几个我</li>
+<li>Consumer：我拿到了消息，但消费失败了或中途挂掉了没告诉Broker。可通过各MQ中间件的ACK机制解决。</li>
+</ul>
+</li>
+</ul>
+<h2 id="基于RocketMQ的简单例子技术框架与业务模型"><a href="#基于RocketMQ的简单例子技术框架与业务模型" class="headerlink" title="基于RocketMQ的简单例子技术框架与业务模型"></a>基于RocketMQ的简单例子技术框架与业务模型</h2><hr>
+<p>以下便以一个基于MongoDB+RocketMQ+Eureka+Spring Cloud Config的技术框架并结合使用MQ中的问题搭建一个简单的消息中心项目案例，其中各组件在项目中的主要作用如下：</p>
+<ul>
+<li>Spring Cloud Config：消息配置(如topic、ConsumerGroup、ProducerGroup)中心。</li>
+<li>Eureka：应用服务注册中心，负责项目中各服务的发现与提供调用。</li>
+<li>MongoDB：由于消息的事务关系不强且Mongodb格式文档自由(json存储，随意增删字段)，所以使用Mongodb存储各个应用发送过来的消息(主要为Sms、Email等)，每次消费前通过RocketMQ的Message ID查询Mongo保证消息幂等性避免重复消费，消费成功后保存消息。</li>
+<li>RocketMQ：消息接收、存储、发送。</li>
+</ul>
+<p>下图为该项目的应用关系模型：<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9rbm93bGVkZ2UtcGljdHVyZXMub3NzLWNuLWJlaWppbmcuYWxpeXVuY3MuY29tL1JvY2tldE1RL01RJUU2JUI2JTg4JUU2JTgxJUFGJUU1JUJBJTk0JUU3JTk0JUE4JUU2JUExJTg4JUU0JUJFJThCLnBuZw?x-oss-process=image/format,png" alt="MQ%E6%B6%88%E6%81%AF%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B.png"></p>
+<p>消息中心应用：统一通用消息的业务处理应用，如短信发送、邮件发送、员工服务号推送等消息的处理<br>问卷应用：负责员工调查问卷的分发，在该例子中只是一个简单的消息发送测试应用<br>common：存放各应用通用类，如短信消息类(SmsMessage)、消息常量类<br>config-server-properties：配置中心的配置存放目录<br>由于该项目主要用于演示一些MQ的功能与使用中的问题解决方式，所以编码部分比较简单。</p>
+<h2 id="应用例子编码"><a href="#应用例子编码" class="headerlink" title="应用例子编码"></a>应用例子编码</h2><ul>
+<li><h3 id="通用模块编码-common"><a href="#通用模块编码-common" class="headerlink" title="通用模块编码(common)"></a>通用模块编码(common)</h3><p>通用模块主要存放各应用通用类(如实体、常量、配置、功能等)。<br>  <strong>MessageConstant：维护消息常量</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public interface MessageConstant &#123;</span><br><span class="line"></span><br><span class="line">    interface System &#123;</span><br><span class="line">        String QUESTION &#x3D; &quot;QUESTION&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    interface Topic &#123;</span><br><span class="line">        String SMS_TOPIC &#x3D; &quot;rocketmq.topic.sms&quot;;</span><br><span class="line">        String SMS_TOPIC_TEMPLATE &#x3D; &quot;$&#123;rocketmq.topic.sms&#125;&quot;;</span><br><span class="line">        String MAIL_TOPIC &#x3D; &quot;rocketmq.topic.mail&quot;;</span><br><span class="line">        String MAIL_TOPIC_TEMPLATE &#x3D; &quot;$&#123;rocketmq.topic.mail&#125;&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    interface Producer &#123;</span><br><span class="line">        String SMS_GROUP_TEMPLATE &#x3D; &quot;$&#123;rocketmq.producer.group.sms&#125;&quot;;</span><br><span class="line">        String MAIL_GROUP_TEMPLATE &#x3D; &quot;$&#123;rocketmq.producer.group.mail&#125;&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    interface Consumer &#123;</span><br><span class="line">        String SMS_GROUP_TEMPLATE &#x3D; &quot;$&#123;rocketmq.consumer.group.sms&#125;&quot;;</span><br><span class="line">        String MAIL_GROUP_TEMPLATE &#x3D; &quot;$&#123;rocketmq.consumer.group.mail&#125;&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  <strong>BaseMessage：基础消息类，所用的通用消息都需继承此类方便统一信息的管理</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Data</span><br><span class="line">@Accessors(chain &#x3D; true)</span><br><span class="line">public abstract class BaseMessage implements Serializable &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 消息源系统:&#123;@link io.wilson.common.message.constant.MessageConstant.System&#125;</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private String system;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  <strong>SmsMessage：通用短信消息类，短信内容数据载体</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">@EqualsAndHashCode(callSuper &#x3D; true)</span><br><span class="line">@Data</span><br><span class="line">@Accessors(chain &#x3D; true)</span><br><span class="line">@ToString(callSuper &#x3D; true)</span><br><span class="line">public class SmsMessage extends BaseMessage &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 短信创建用户</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private String createUserId;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 接收短信用户</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private String toUserId;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 手机号码</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private String mobile;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 短信内容</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private String content;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><h3 id="消息中心应用-message-center"><a href="#消息中心应用-message-center" class="headerlink" title="消息中心应用(message-center)"></a>消息中心应用(message-center)</h3><p>  消息中心在进行编码之前，需确认消息中心该如何进行消息的处理。该项目所处的业务环境是各应用可能都需要发送一些短信消息、邮件、服务号消息等，相同消息的业务处理是一致的，所以消息中心对消息接收消费的主要流程如下：</p>
+<ul>
+<li>保证消息幂等性(查询数据库使用已有消息记录避免重复消费)</li>
+<li>消息业务处理</li>
+<li>消息日志入库</li>
+</ul>
+<p>在该项目中，不同的消息类型存储在不同的Mongodb collection(同Mysql table概念)，但共用一个消息日志类MessageLog：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">@Data</span><br><span class="line">@Accessors(chain &#x3D; true)</span><br><span class="line">public class MessageLog implements Serializable &#123;</span><br><span class="line">    private String msgId;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 发送方系统名称 &#123;@link io.wilson.common.message.constant.MessageConstant&#125;</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private String system;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 消息对象json字符串</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private String msgContent;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 业务执行结果</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private Boolean success;</span><br><span class="line">    private LocalDateTime createTime;</span><br><span class="line">    private LocalDateTime updateTime;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 初始化消息记录</span><br><span class="line">     *</span><br><span class="line">     * @param message       消息</span><br><span class="line">     * @return</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static &lt;T extends BaseMessage&gt; MessageLog convertFromMessage(T message) &#123;</span><br><span class="line">        LocalDateTime now &#x3D; LocalDateTime.now();</span><br><span class="line">        return new MessageLog()</span><br><span class="line">                .setSystem(message.getSystem())</span><br><span class="line">                .setSuccess(false)</span><br><span class="line">                .setCreateTime(now)</span><br><span class="line">                .setUpdateTime(now);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  在该消费流程设计与开发编码过程中个人考虑的核心点如下：</p>
+<ol>
+<li>如果使用普通消息类(如SmsMessage)作为db存储的映射对象，会导致消息类掺杂不必要的属性(如createTime、updateTime、success)，且作为一个通用的消息数据载体，普通消息类更适于作为一个VO而非DO使用，所以消息的处理结果、消息的创建更新时间这些作为原消息上的附加内容，更适合放到其它数据库映射对象中维护，所以定义了MessageLog作为消息记录的实体类</li>
+<li>既然是作为各应用都可使用的通用消息所以肯定都会有一定数据量，虽然映射实体都一样，但存放到不同的collection可以提高操作的便捷性和获得更好的性能，系统编码可以更好地根据系统进行消息筛选</li>
+<li>在消息消费流程中，保证消息幂等性和消息日志入库这两步只有数据库名是不同的，所以可定义一个父Listener进行消息监听消费的方法抽象，不同消息的业务处理交给不同的消息Service，同一类消息的消费可能会再细分调用不同的消息业务方法消费(如发送单条短信、批量发送短信)，所以可以对各service抽象出一个consume()方法根据参数调用具体的service业务方法进行消息消费</li>
+</ol>
+<ul>
+<li><h4 id="消息中心类图与消费流程图"><a href="#消息中心类图与消费流程图" class="headerlink" title="消息中心类图与消费流程图"></a>消息中心类图与消费流程图</h4><p>为了更好地展示消息中心中类之间的关系，描绘以下类图：<br> <img src="https://img-blog.csdnimg.cn/20200309131427286.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3oyODEyNjMwOA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">      </p>
+<p>当一条短信消息发送到消息中心时，其消费流程如下图：<br><img src="https://img-blog.csdnimg.cn/20200309131600757.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3oyODEyNjMwOA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+</li>
+<li><h4 id="消息业务处理编码"><a href="#消息业务处理编码" class="headerlink" title="消息业务处理编码"></a>消息业务处理编码</h4><p>  <strong>BaseMessageService：消息业务消费抽象接口，抽象每个消费者(Listener)调用的业务消费方法</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public interface BaseMessageService&lt;T extends BaseMessage&gt; &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 消费消息</span><br><span class="line">     *</span><br><span class="line">     * @param message         消息</span><br><span class="line">     * @param consumeFunction 消费方法</span><br><span class="line">     *&#x2F;</span><br><span class="line">    default boolean consume(T message, Function&lt;T, Boolean&gt; consumeFunction) &#123;</span><br><span class="line">        return consumeFunction.apply(message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>BaseMessageService：短信消息业务抽象接口</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">public interface SmsMessageService extends BaseMessageService&lt;SmsMessage&gt; &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 发送单条短信消息</span><br><span class="line">     *</span><br><span class="line">     * @param smsMessage</span><br><span class="line">     * @return 业务处理结果</span><br><span class="line">     *&#x2F;</span><br><span class="line">    boolean sendSingle(SmsMessage smsMessage);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>SmsMessageServiceImpl：短信消息业务实现类</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">@Slf4j</span><br><span class="line">public class SmsMessageServiceImpl implements SmsMessageService &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean sendSingle(SmsMessage smsMessage) &#123;</span><br><span class="line">        &#x2F;&#x2F; 短信业务操作结果</span><br><span class="line">        boolean isSuccess &#x3D; true;</span><br><span class="line">        &#x2F;*</span><br><span class="line">         * 短信业务操作并把操作结果设到isSuccess中</span><br><span class="line">         *&#x2F;</span><br><span class="line">        if (Objects.equals(smsMessage.getToUserId(), &quot;Wilson&quot;)) &#123;</span><br><span class="line">            isSuccess &#x3D; false;</span><br><span class="line">            log.info(&quot;短信发送失败,消息内容:&#123;&#125;&quot;, smsMessage);</span><br><span class="line">        &#125;</span><br><span class="line">        return isSuccess;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><h4 id="消息业务处理编码-1"><a href="#消息业务处理编码-1" class="headerlink" title="消息业务处理编码"></a>消息业务处理编码</h4><p>  <strong>MessageLogConstant：维护MessageLog的相关常量(如不同消息的collection名)</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public interface MessageLogConstant &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 各消息日志Mongo集合名</span><br><span class="line">     *&#x2F;</span><br><span class="line">    interface CollectionName &#123;</span><br><span class="line">        String SMS &#x3D; &quot;sms_message_log&quot;;</span><br><span class="line">        String MAIL &#x3D; &quot;mail_message_log&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>AbstractMQStoreListener：保证消息幂等性、消息日志入库操作的抽象Listener类方法中</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">@Slf4j</span><br><span class="line">public abstract class AbstractMQStoreListener &#123;</span><br><span class="line"></span><br><span class="line">    @Resource</span><br><span class="line">    protected MongoTemplate mongoTemplate;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 判断消息是否已被消费</span><br><span class="line">     *</span><br><span class="line">     * @param msgId</span><br><span class="line">     * @return</span><br><span class="line">     *&#x2F;</span><br><span class="line">    protected boolean isConsumed(String msgId) &#123;</span><br><span class="line">        long count &#x3D; mongoTemplate.count(new Query(Criteria.where(&quot;msg_id&quot;).is(msgId)), collection());</span><br><span class="line">        if (count &gt; 0) &#123;</span><br><span class="line">            log.info(&quot;消息&#123;&#125;已成功消费过，请勿重复投递!&quot;, msgId);</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 当前消息的mongo collection名:&#123;@link io.wilson.message.domain.constant.MessageLogConstant.CollectionName&#125;</span><br><span class="line">     *</span><br><span class="line">     * @return 当前消息存储的collection名</span><br><span class="line">     *&#x2F;</span><br><span class="line">    protected abstract String collection();</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 保存消息消费记录</span><br><span class="line">     *</span><br><span class="line">     * @param success 业务执行结果</span><br><span class="line">     * @param msgId   消息id</span><br><span class="line">     * @param message</span><br><span class="line">     *&#x2F;</span><br><span class="line">    void store(boolean success, String msgId, BaseMessage message) &#123;</span><br><span class="line">        MessageLog messageLog &#x3D; MessageLog.convertFromMessage(message)</span><br><span class="line">                .setMsgId(msgId)</span><br><span class="line">                .setMsgContent(JSONObject.toJSONString(message))</span><br><span class="line">                .setSuccess(success);</span><br><span class="line">        mongoTemplate.insert(messageLog, collection());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>SmsMessageListener:短信消息监听器(消费者)，如在消费过程中抛出异常，RocketMQ会以一定的时间间隔进行重新投递消费</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">@Slf4j</span><br><span class="line">@Service</span><br><span class="line">@ConditionalOnProperty(MessageConstant.Topic.SMS_TOPIC)</span><br><span class="line">@RocketMQMessageListener(topic &#x3D; MessageConstant.Topic.SMS_TOPIC_TEMPLATE, consumerGroup &#x3D; MessageConstant.Consumer.SMS_GROUP_TEMPLATE)</span><br><span class="line">public class SmsMessageListener extends AbstractMQStoreListener implements RocketMQListener&lt;MessageExt&gt; &#123;</span><br><span class="line">    @Resource</span><br><span class="line">    private SmsMessageService smsMessageService;</span><br><span class="line">    private static final String EXCEPTION_FORMAT &#x3D; &quot;短信消息消费失败，消息内容：%s&quot;;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onMessage(MessageExt message) &#123;</span><br><span class="line">        String msgId &#x3D; message.getMsgId();</span><br><span class="line">        if (isConsumed(msgId)) &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        SmsMessage smsMessage &#x3D; JSONObject.parseObject(message.getBody(), SmsMessage.class);</span><br><span class="line">        log.info(&quot;接收到短信消息&#123;&#125;：&#123;&#125;&quot;, msgId, smsMessage);</span><br><span class="line">        &#x2F;*if (Objects.equals(smsMessage.getToUserId(), &quot;2020&quot;)) &#123;</span><br><span class="line">            log.error(&quot;消息&#123;&#125;消费失败&quot;, message.getMsgId());</span><br><span class="line">            &#x2F;&#x2F; 抛出异常让RocketMQ重新投递消息重新消费</span><br><span class="line">            throw new MQConsumeException(String.format(EXCEPTION_FORMAT, smsMessage));</span><br><span class="line">        &#125;*&#x2F;</span><br><span class="line">        boolean isSuccess &#x3D; smsMessageService.consume(smsMessage, smsMessageService::sendSingle);</span><br><span class="line">        if (!isSuccess) &#123;</span><br><span class="line">            log.info(&quot;短信消息业务操作失败,消息id: &#123;&#125;&quot;, msgId);</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F; 保存消息消费记录</span><br><span class="line">        store(isSuccess, msgId, smsMessage);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected String collection() &#123;</span><br><span class="line">        return MessageLogConstant.CollectionName.SMS;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>MessageCenterApplication:主程序</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@SpringBootApplication</span><br><span class="line">@EnableDiscoveryClient</span><br><span class="line">public class MessageCenterApplication &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(MessageCenterApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  <strong>Spring Cloud配置文件bootstrap.yml</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">eureka:</span><br><span class="line">  client:</span><br><span class="line">    service-url:</span><br><span class="line">      defaultZone: http:&#x2F;&#x2F;localhost:8000&#x2F;eureka</span><br><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    config:</span><br><span class="line">      discovery:</span><br><span class="line">        enabled: true</span><br><span class="line">        service-id: config-center</span><br><span class="line">      #     资源文件名</span><br><span class="line">      profile: dev</span><br><span class="line">      name: rocketmq</span><br></pre></td></tr></table></figure>
+<p>  <strong>SmsSendTest：单元测试类</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@SpringBootTest(classes &#x3D; MessageCenterApplication.class)</span><br><span class="line">@RunWith(SpringJUnit4ClassRunner.class)</span><br><span class="line">public class SmsSendTest &#123;</span><br><span class="line">    @Resource</span><br><span class="line">    private RocketMQTemplate rocketMQTemplate;</span><br><span class="line">    @Value(MessageConstant.Topic.SMS_TOPIC_TEMPLATE)</span><br><span class="line">    private String smsTopic;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void sendSms() &#123;</span><br><span class="line">        SmsMessage smsMessage &#x3D; new SmsMessage();</span><br><span class="line">        smsMessage.setToUserId(&quot;13211&quot;)</span><br><span class="line">                .setMobile(&quot;173333222&quot;)</span><br><span class="line">                .setContent(&quot;测试短信消息&quot;)</span><br><span class="line">                .setSystem(MessageConstant.System.QUESTION);</span><br><span class="line">        rocketMQTemplate.send(smsTopic, MessageBuilder.withPayload(smsMessage).build());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 
 </li>
 </ul>
-<p>分割线：<code>---</code>、<code>- - -</code>、<code>&lt;hr&gt;</code>、<code>***</code>、<code>* * *</code><br>区块：<code>&gt; 文本内容</code>,区块可以有多级，根据 <code>&gt;</code> 个数确认级数，可以与列表语法互相嵌套，如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">列表嵌套区块：</span><br><span class="line">- 元素1</span><br><span class="line">  &gt; 一级区块</span><br><span class="line">  &gt;&gt; 二级区块</span><br><span class="line">  - 元素1.1</span><br><span class="line">- 元素2</span><br><span class="line">  - 元素2.1</span><br><span class="line">  &gt; 一级区块</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line"></span><br><span class="line">代码块(纯文本,&#96;&#96;&#96;后可选择语言,如java、javascript)： </span><br><span class="line">&lt;pre&gt;</span><br></pre></td></tr></table></figure>
-<p>// code or text</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;&#x2F;pre&gt;</span><br><span class="line">或</span><br></pre></td></tr></table></figure>
-<pre>
-code or text
-</pre>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">超链接： &#96;[个人blog](http:&#x2F;&#x2F;wilson-he.gitee.io&#x2F;)&#96;  </span><br><span class="line">插入图片：&#96;![description](url)&#96;,也可使用img标签&#96;&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;www.editplus.com&#x2F;ss&#x2F;editplus680x340.png&quot; width&#x3D;&quot;50%&quot; height&#x3D;&quot;30%&quot;&#x2F;&gt;&#96;  </span><br><span class="line">表格：</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th>表头</th>
-<th>表头</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>单元格</td>
-<td>单元格</td>
-</tr>
-<tr>
-<td>单元格</td>
-<td></td>
-</tr>
-<tr>
-<td>单元格</td>
-<td>单元格</td>
-</tr>
-<tr>
-<td>```</td>
-<td></td>
-</tr>
-<tr>
-<td>`</td>
-<td></td>
-</tr>
-<tr>
-<td>内容缩略：</td>
-<td></td>
-</tr>
-<tr>
-<td><details></td>
-<td></td>
-</tr>
-<tr>
-<td><summary>概况</summary></td>
-<td></td>
-</tr>
-<tr>
-<td>详细内容</td>
-<td></td>
-</tr>
-<tr>
-<td></details></td>
-<td></td>
-</tr>
-</tbody></table>
-<table>
-    <caption>标题</caption>
-    <tr>
-        <td>1</td>
-        <td>2</td>
-    </tr>
-    <tr>
-        <td>11</td>
-        <td>22</td>
-    </tr>
-    <tr>
-        <td>111</td>
-    </tr>
-</table>
+</li>
+</ul>
+<ul>
+<li><h3 id="配置中心-config-server"><a href="#配置中心-config-server" class="headerlink" title="配置中心(config-server)"></a>配置中心(config-server)</h3><p>主程序ConfigServerApplication</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@SpringBootApplication</span><br><span class="line">@EnableDiscoveryClient</span><br><span class="line">@EnableConfigServer</span><br><span class="line">public class ConfigServerApplication &#123;</span><br><span class="line">   public static void main(String[] args) &#123;</span><br><span class="line">      SpringApplication.run(ConfigServerApplication.class, args);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Spring Cloud配置文件bootstrap.yml:</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    config:</span><br><span class="line">      server:</span><br><span class="line">        git:</span><br><span class="line">          uri: https:&#x2F;&#x2F;gitee.com&#x2F;Wilson-He&#x2F;rocketmq-message-center-demo.git</span><br><span class="line">          username: Wilson-He</span><br><span class="line">          force-pull: true</span><br><span class="line">          password:</span><br><span class="line">          # 配置文件在uri下的目录</span><br><span class="line">          search-paths: &#x2F;config-server-properties</span><br><span class="line">eureka:</span><br><span class="line">  client:</span><br><span class="line">    service-url:</span><br><span class="line">      defaultZone: http:&#x2F;&#x2F;localhost:8000&#x2F;eureka</span><br></pre></td></tr></table></figure>
+<p>配置文件configs-server-properties/rocketmq-dev.properties:</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">rocketmq.name-server&#x3D;127.0.0.1:9876</span><br><span class="line">rocketmq.topic.sms&#x3D;sms-topic</span><br><span class="line">rocketmq.producer.group.sms&#x3D;sms-group</span><br><span class="line">rocketmq.consumer.group.sms&#x3D;sms-group</span><br><span class="line">rocketmq.topic.mail&#x3D;mail-topic</span><br><span class="line">rocketmq.producer.group.mail&#x3D;mail-group</span><br><span class="line">rocketmq.consumer.group.mail&#x3D;mail-group</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h2 id="运行流程"><a href="#运行流程" class="headerlink" title="运行流程"></a>运行流程</h2><ol>
+<li>运行RocketMQ name-server与broker,如<code>mqnamesrv -n 127.0.0.1:9876</code>,<code>mqbroker -n 127.0.0.1:9876</code></li>
+<li>运行eureka应用</li>
+<li>运行配置中心config-server</li>
+<li>运行消息中心message-center</li>
+<li>运行message-center单元测试类(SmsSendTest)或运行question-app访问<code>localhost:8080/question/toUser?userId=xxx</code>进行消费测试，消息中心控制台打印出日志信息与Mongo sms_message_log成功新增了数据即项目搭建完成<br><img src="https://img-blog.csdnimg.cn/20200309131857721.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3oyODEyNjMwOA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200309131930100.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3oyODEyNjMwOA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
+</ol>
+<p><strong>(待)扩展点：</strong></p>
+<ol>
+<li>RocketMQ的发送者应用可在配置文件中设置rocketmq.producer.retry-times-when-send-failed/retry-times-when-send-async-failed属性配置rocketmq同步/异步发送消息失败后的重试次数，不设置则默认都为2</li>
+<li>当业务执行操作结果失败时仍然入库的原因是有时业务执行过程中可能会包含调用第三方的操作，当第三方报错时会导致业务操作结果失败，而第三方的操作是不可控的，所以先把报错结果保存便于追溯，且有业务需要时也可通过定时任务查库重新执行业务</li>
+<li>该例子中只用了一个消息配置文件，实际开发中消息配置需根据项目所需配置到对应的项目配置文件，如question-app的消息配置(如topc、producerGroup)应在其项目中的配置文件(如application.yml、apollo的namespace)中配置</li>
+<li>该项目中的NameServer、Broker并没有集群部署，Broker集群部署后配置同步双写避免主机写入后尚未同步到从机就宕机导致消息丢失的情况(有意向的自行百度：RocketMQ 同步双写)</li>
+</ol>
+<h2 id="末"><a href="#末" class="headerlink" title="末"></a>末</h2><p>该文章通过一个简单的项目例子演示了使用Spring Boot RocketMQ处理MQ常见问题的一些方式：</p>
+<ul>
+<li>消息重复消费问题可通过数据库存储来保证幂等性</li>
+<li>若消息消费业务操作失败时可通过Listener抛出异常让RocketMQ重新投递消息进行消费</li>
+</ul>
+<p><a href="https://github.com/Wilson-He/rocketmq-message-center-demo" target="_blank" rel="noopener">项目源码</a></p>
+
       
     </div>
 
